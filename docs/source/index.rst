@@ -4,7 +4,7 @@
 Initial setup
 =============
 
-**IMPORTANT:** 
+**IMPORTANT:**
       The application you want to trace must **NOT** already be
       running. The panel needs to be configured in advance of starting your
       application.
@@ -25,17 +25,19 @@ Initial setup
    be available in this list
 
 -  **New connection** – section that allows you specify a new remote connection. New connections
-   will be added to the connections list.
+   will be added to the connections list
 
-2) Connect the **Radeon Developer Panel** to the **Radeon Developer
-   Service**:
+2) Connect to a **Local** or **Remote** connection:
 
       **Select an entry from the Connection dropdown,
-      then click the “Connect” button.** This will start the Radeon
-      Developer Service on the local system and establish a connection.
+      then click the “Connect” button. This will attempt to establish a connection to a **Radeon Developer Service**
 
 Note that the red indicator to the left of the “CONNECTION” tab will change to
 green to indicate that the connection was successful.
+
+**NOTE**
+   For Local connections, starting **Radeon Developer Service** is optional.
+   For Remote Connections, a **Radeon Developer Service** instance must be started on the remote machine (see below)
 
 Remote connections
 ==================
@@ -48,25 +50,52 @@ where the application is to be run). Make a note of the remote system's IP addre
 tab, enter the IP address of the **remote** system in the **Host name** and then
 click the  “Connect” button.
 
-Application list
-================
+System
+======
 
 After a connection is made to the service, the panel will switch to the
 **System** tab.
 
 .. image:: media/System_1.png
-..
 
-   The system tab contains various panels for configuration:
+The system tab contains various panels for configuration:
 
-- **My applications** - List of applications enabled for driver connection
+- :ref:`MyApplications` - List of applications enabled for driver connection
 
-- **Application blacklist** - List of applications blacklisted from driver connection
+- :ref:`MyWorkflows` - List of workflows defining pre-launch configuration settings
 
-In the **My applications** list, using the edit line
-or by selecting from the filesystem add an application
-to the list, specifying an **API** type
-from the combobox to check for when running the application.
+- :ref:`BlockedApplications`- List of applications blocked from driver connection
+
+- :ref:`Paths` - List of executable paths to tools used to consume output of **Radeon Developer Panel** such as **Radeon GPU Profiler** or **Radeon Memory Visualizer**
+
+.. _MyApplications:
+
+My applications
+---------------
+
+The **My applications** pane in Radeon Developer Panel contains the list of applications the user
+will want to connect with to profile or trace.
+
+There are two modes of connection available.
+
+   - **Basic Mode** - Any application run (not already in blocked applications list) will connect
+
+   - **Advanced Mode** - Only applications with entries specified in the application list will connect
+
+These modes can be toggled using the **Advanced Mode** toggle at the top of the pane.
+
+**Advanced Mode** toggled off is **Basic Mode**
+
+Application entries can be added to the list using **Advanced Mode** as follows:
+
+   - Enter the executable name into the input field, or click the file icon at the end of the input field to select the executable using a file browser.
+   - Specify the workflow to be used for pre-launch configuration by this entry using the **Workflow** dropdown.
+   - Specify the **API** type to check against for this application from the dropdown.
+
+**IMPORTANT**
+   Applications launched while using **Basic Mode** will automatically attempt a connection and (if an entry does not already exist in table)
+   have an entry created in the table using the current workflow selected in the **Workflow** dropdown. If an entry existed for the application, then the
+   global workflow chosen in the **Basic Mode** will override it.  A proper warning message is shown in the status column in this view.
 
 **IMPORTANT**
       The **API** specified works as a filter against the client application
@@ -74,15 +103,131 @@ from the combobox to check for when running the application.
       or don't care use the default **Auto**
 
 Once an application is added to the list, it can then be run on the system to
-start a driver connection. 
+start a driver connection.
 
 When a connection to the client application has
 been established, the panel will then switch to the **Applications** tab.
 
-**IMPORTANT**
-      When the **Memory Trace** workflow is enabled for an application entry,
-      memory tracing will be started when the application is launched.
+.. _MyWorkflows:
 
+My workflows
+------------
+
+The **My workflows** pane in Radeon Developer Panel allows the user to specify a set of enabled features and pre-launch
+configuration options to be used when connecting an application.
+
+Defining a workflow to contain these pre-launch settings such as the profile/trace output
+path or capture mode allows for re-use of the settings across multiple applications.
+
+.. image:: media/Workflow_1.png
+
+Each workflow contains a list of features such as **Profiling**, **MemoryTrace**, or **DeviceClocks** which
+can be enabled or disabled
+
+There are also configuration options available for these features:
+
+**Profiling Configuration**
+
+The following are the configurable options for profiling
+
+- **Output Path**:
+   * Defines the output path for saving captured profiles
+   * Use the macro **$(APP_NAME)** to insert the connected application's name into path
+
+- **Vulkan/DirectX12**:
+   * Displays information about the active trigger mode for profile capture
+
+.. image:: media/Workflow_Profiling_Config.png
+
+- **OpenCL**:
+   * Displays configuration options for the trigger mode and dispatch range for profile capture
+   * Enable auto capture checkbox can enable/disable automatic capture for OpenCL
+   .. image:: media/Workflow_Profiling_Config_OpenCL_AutoCapture.png
+   * Dispatch Range allows for setting the start and stop dispatch indices to use during automatic profile capture
+   * Dispatch Count specifies the number of dispatches to include in the profile capture
+
+.. image:: media/Workflow_Profiling_Config_OpenCL.png
+
+
+**Memory Trace Configuration**
+
+The following are the configurable options for memory trace
+
+- **Output Path**:
+   * Defines the output path for saving captured traces
+   * Use the macro **$(APP_NAME)** to insert the connected application's name into path
+
+.. image:: media/Workflow_MemoryTrace_Config.png
+
+.. _BlockedApplications:
+
+Blocked applications
+-------------------------
+
+Sometimes it is useful to completely exclude certain background applications
+from being recognized and displayed in the Radeon Developer Panel. For example,
+Windows 10 has applications that use DirectX 12 and when they are started can
+show up in the list of target applications. The **Profiling** feature also requires
+that only one application is started while using the feature so blocking applications, such as launchers
+that run before another application starts, can be useful.
+
+The panel has a default list of applications that are blocked. Applications
+can be added or removed from the list by selecting the **Blocked applications**
+subtab on the **System** tab then clicking one of the buttons below the list
+of process names. When editing or removing entries, first select the process name
+from the list then click the edit or remove button. The list can also be restored
+to the default set of blocked applications. Right clicking on a process name in the
+list will display context menu options to add, remove, or edit.
+
+.. image:: media/Blocked_apps_1.png
+
+.. _Paths:
+
+Paths
+-----
+
+After capturing a profile or trace for an application, it is often desirable to open the output
+file using the associated tool such as **Radeon GPU Profiler** or **Radeon Memory Visualizer**.
+
+The paths pane allows for setting the global path to the tool to be used by Radeon Developer Panel to open
+captured profiles or traces. A **Restore Defaults** button allows for resetting the path values to the default value
+pointing to the panel's executable path directory containing **Radeon GPU Profiler** and **Radeon Memory Visualizer**
+
+.. image:: media/Paths_1.png
+
+How to profile your application
+===============================
+
+Upon running an application successfully the panel will have switched
+to the **Applications** tab shown here:
+
+.. image:: media/Profiling_1.png
+
+The profiling UI has the following elements:
+
+- **Capture profile** - Captures a profile and writes to disk
+
+- **Enable instruction tracing** - Enables capturing detailed instruction data
+
+- **Recently collected profiles** - Displays any recently collected profiles found in the output directory
+
+Capturing a profile can be achieved by the following:
+
+* **Click the Capture profile button**
+
+   Clicking the **Capture profile** button from the Profiling UI will capture a frame and write the results to disk.
+
+* **Use the Ctrl-Shift-C hotkey**
+
+   Using Ctrl-Shift-C hotkey on Windows or Linux (see :ref:`HotkeyCapture`) will capture a frame and write the results to disk.
+
+Example output:
+
+   sample-20200908-092653.rgp
+
+**NOTE**
+   The profile output directory is specified as part of the associated **workflow** with this application
+   entry in the **My applications** list
 
 How to memory trace your application
 ====================================
@@ -108,8 +253,6 @@ The memory trace UI has the following elements:
 
 -  **Recently collected traces** – displays any recently collected traces in output directory
 
--  **Trace settings** - specify trace output directory and **Radeon Memory Visualizer** path
-
 Writing out the memory trace to file can be achieved by one of the following:
 
 * **Close the running application**
@@ -129,7 +272,330 @@ Example output:
 
    sample_20200316-143712.rmv
 
+**NOTE**
+   The trace output directory is specified as part of the associated **workflow** with this application
+   entry in the **My applications** list
+
 **IMPORTANT:**
       Once a memory trace has finished either through closing the application or
       through clicking the **Dump trace** button. The application **MUST** be
       closed and re-launched to start a new memory trace.
+
+
+Using the Clock settings
+========================
+
+The Radeon Developer Panel (RDP) allows the developer to select from a
+number of clock modes.
+
+.. image:: media/Clocks_1.png
+
+Normal clock mode will run the GPU as it would normally run your
+application. To ensure that the GPU runs within its designed power and
+temperature envelopes, it dynamically adjusts the internal clock frequency.
+This means that profiles taken of the same application may differ
+significantly, making side-by-side comparisons impossible.
+
+Stable clock mode will run the GPU at a lower, fixed clock rate. Even though
+the application may run slower than normal, it will be much easier to compare
+profiles of the same application.
+
+When capturing a profile, the clock settings here are not used since the
+driver forces a profile to take place using peak clocks.
+
+**NOTE**
+   A running, connected application is required in order to change the GPU clock modes
+
+
+Connection Log
+==============
+
+Use the keyboard shortcut Ctrl-L to bring up the connection log. Additional
+information about the connection and any errors encountered by Radeon Developer Panel and the Radeon Developer Service are
+displayed here. Connection log messages are logged by thread and the log view only displays one thread's log messages at a time.
+Log messages from other threads can be viewed using the source dropdown. Below is an example of typical output from a session that captured
+a profile.
+
+.. image:: media/Log_1.png
+
+| This log is also saved in a log file located at:
+| "C:\\Users\\your_name\\AppData\\Roaming\\RadeonDeveloperPanel\\log.txt"
+
+| On Linux, this log is located at:
+| "~/.local/share/RadeonDeveloperPanel/log.txt"
+
+
+.. _HotkeyCapture:
+
+Capturing using the keyboard on Linux
+=====================================
+
+Some applications capture focus or run fullscreen which makes capturing
+a profile difficult. The Radeon Developer Panel provides a hotkey to allow
+capturing using the keyboard. Presently, this is Shift-Ctrl-C. By default,
+on Linux, the hotkey is only available when starting the Panel with elevated
+privileges (i.e. sudo RadeoDeveloperPanel). To use the hotkey while running
+Radeon Developer Panel with standard privileges, run the enable_kbd_dev_read.sh
+script found in the /scripts directory of the Radeon Developer Panel package.
+This script adds read privileges to the current user for the keyboard device
+files. It must be run each time the PC is restarted. By default, the keyboard
+device files are found in the path ‘/dev/input/by-path’, and end with
+‘event-kbd’. If this path doesn’t exist or the keyboard device has a different
+name, copy the KeyboardDevice.txt file from the /docs directory to the root
+folder where these tools are located and edit this file so it contains the full
+path and file name of the keyboard device on your system.
+
+The Radeon Developer Service
+============================
+
+Two versions of the Radeon developer service are provided, one with a
+configuration UI and system tray icon, and one designed for use with
+headless GPU system where no UI can be supported.
+
+Radeon Developer Service for desktop developer system
+-----------------------------------------------------
+
+RadeonDeveloperService(.exe) – Can be used for general use where the
+system has a monitor and UI (e.g. desktop development machines). The
+Radeon Developer Service includes a configuration window containing
+basic service configuration settings and software info. **Double click
+the Radeon Developer Service system tray icon** to open the
+configuration window, or right-click on the system tray icon and select
+‘configure’ from the context menu.
+
+.. image:: media/RDS_1.png
+
+-  **Listen port** – The port that the Radeon Developer Service uses to
+   listen for incoming connections from a remote Radeon Developer Panel.
+   **The default port is 27300**. Altering the port will disconnect all
+   existing sessions. The circular arrows icon to the right of the
+   Listen port field can be clicked to reset the port to the default
+   value.
+
+-  **Version info** – Software version information for the Radeon
+   Developer Service.
+
+Double click the Radeon Developer Service system tray icon again or
+right-click on the system tray icon and select ‘configure’ from the
+context menu to close the configuration window.
+
+**Please note** that when running both the Radeon Developer Panel and
+the Radeon Developer Service on the same system the communication
+between the two uses pipes, not sockets and ports, so setting the port
+has no effect.
+
+Radeon Developer Service for headless GPU systems
+-------------------------------------------------
+
+RadeonDeveloperServiceCLI(.exe) – Command line version for use with
+headless GPU systems where no UI can be provided. NOTE: This version can
+also run on a system that has a monitor and UI.
+
+The following command line options are available for
+RadeonDeveloperServiceCLI:
+
+1) **-- port <port number>** *Overrides the default listener port used
+   by the service (27300 is the default).*
+
+**Please note** that the service will need to be explicitly started
+before starting the Radeon Developer Panel. If the service isn’t
+running, the Radeon Developer Panel will automatically start the UI
+version of the Radeon Developer Service, which may not be what is
+required.
+
+Known Issues
+============
+
+Cleanup After a RadeonDeveloperServiceCLI Crash
+-----------------------------------------------
+
+If the RadeonDeveloperServiceCLI executable crashes on Linux, shared
+memory may need to be cleaned up by running the RemoveSharedMemory.sh
+script located in the script folder of the RGP release kit. Run the
+script with elevated privileges using sudo. If this fails to work,
+try starting the panel with elevated privileges.
+
+Windows Firewall Blocking Incoming Connections
+----------------------------------------------
+
+1) **Deleting the settings file**. If problems arise with connection or
+   application histories, these can be resolved by deleting the Radeon
+   Developer Panel’s settings file at:
+   "C:\\Users\\your\_name\\AppData\\Roaming\\RadeonDeveloperPanel\\settings.ini"
+
+   on Windows. On Linux, the corresponding file is located at:
+
+   "~/.local/share/RadeonDeveloperPanel/settings.ini"
+
+2) **“Connection Failure”** error message. This issue is sometimes seen
+   when running the panel for the very first time. The panel tries to
+   start the service automatically for local connections and this can
+   fail. If you see this message try manually starting the
+   “RadeonDeveloperService.exe” and connect again.
+
+3) **Remote connection attempts timing out.** When running the Radeon
+   Developer Service on Windows, the Windows Firewall may attempt to
+   block incoming connection attempts from other machines. The best
+   methods of ensuring that remote connections are established correctly
+   are:
+
+   a. Allow the RDS firewall exception to be created within the Windows
+      Firewall when RDS is first started. Within the Windows Security
+      Alert popup, enable the checkboxes that apply for your network
+      configuration, and click “Allow access”.
+
+.. image:: media/Firewall_1.png
+
+a. If “Cancel” was previously clicked in the above step during the first
+   run, the exception for RDS can still be enabled by allowing it within
+   the Windows Control Panel firewall settings. Navigate to the “Allow
+   an app or feature” section, and ensure that the checkbox next to the
+   RadeonDeveloperService.exe entry is checked:
+
+.. image:: media/Firewall_2.png
+
+.. image:: media/Firewall_3.png
+
+a. Alternatively, disable the Windows Firewall entirely will also allow
+   RDS to be connected to.
+
+   **NOTE** The Windows firewall alert in no way indicates that the Radeon
+   Developer tools are trying to communicate to an AMD server over the
+   internet. The Radeon Developer tools do not attempt to connect to a remote
+   AMD server of any description and do not send personal or system information
+   over remote connections. The Radeon Developer Panel needs to communicate
+   with the Radeon Developer Service, which may or may not be on the same
+   machine, and a connection needs to be made between the two (normally via a
+   socket).
+
+Disabling Linux Firewall
+------------------------
+
+If the remote machine is running Linux and the **“Connection Failure”**
+error message is displayed, the Linux firewall may need to be disabled.
+This is done by typing “\ **sudo ufw disable**\ ” in a terminal. The
+firewall can be re-enabled after capturing by typing “\ **sudo ufw
+enable**\ ”.
+
+.. _Linux-GPU_clocks-ref:
+
+Setting GPU clock modes on Linux
+--------------------------------
+
+Adjusting the GPU clock mode on Linux is accomplished by writing to
+/sys/class/drm/card<n>/device/power\_dpm\_force\_performance\_level,
+where <n> is the index of the card in question. By default this file is
+only modifiable by root, so the application being profiled would have to
+be run as root in order for it to modify the clock mode. It is possible
+to modify the permissions for the file instead so that it can be written
+by unprivileged users. The Radeon GPU Profiler package includes the
+“\ **scripts/EnableSetClockMode.sh**\ ” script which will allow setting
+GPU clock mode in cases where the target application is not, or cannot,
+run as root. **Execute this script before running the Radeon Developer
+Service and target application,** and the GPU clock mode can be updated
+correctly at runtime. This script needs to be run each time you reboot
+your machine; the file permissions do not survive system reboots.
+
+Radeon Developer Panel connection issues on Linux
+-------------------------------------------------
+
+The Radeon Developer Panel may fail to start the Radeon Developer
+Service when the Connect button is clicked. If this occurs, manually
+start the Radeon Developer Service, select localhost from the Recent
+connections list and click the Connect button again.
+
+.. _DX12-timing-ref:
+
+Missing Timing Data for DirectX 12 Applications
+-----------------------------------------------
+
+To collect complete profile datasets for DirectX 12 applications, the
+user account in Windows needs to be associated with the “Performance Log
+Users” group. If these privileges aren't configured properly, profiles
+collected under the user’s account may not include all timing data for
+GPU Sync objects.
+
+A batch file is provided to add the current user to the group
+(scripts\\AddUserToGroup.bat). The batch file should be run as
+administrator (Right click on file and select “Run as Administrator”).
+The script’s output is shown below:
+
+.. image:: media/Bat_1.png
+
+Alternatively, to manually add the active user to the proper group,
+follow these steps:
+
+1) **Open the Run dialog** by using the Windows Start menu, or through
+   the Windows + R shortcut.
+
+   a. **Type** "**lusrmgr.msc**" into the Run window, and **click OK**.
+
+.. image:: media/Run_1.png
+
+2) Within the "Local Users and Groups" configuration window that opens,
+   **select the Groups node**.
+
+   a. **Select the Performance Log Users entry. Right-click and select
+      Properties**.
+
+.. image:: media/Users_1.png
+
+1) To add the active user to the group, **click the Add... button**. (If
+   the active user appears within this list, the account is already
+   configured properly.)
+
+.. image:: media/Add_User_1.png
+
+2) **Type the active user's account name** into the Select Users,
+   Computers, Service Accounts, or Groups dialog, and **click OK**.
+
+.. image:: media/Select_User_1.png
+
+3) When the user has been added to the group, **restart the machine**
+   and log back in. RDS should now be configured to collect full timing
+   information for DirectX 12 applications.
+
+Radeon Developer Service Port numbers
+-------------------------------------
+
+Please note that when running both the Radeon Developer Panel and the
+Radeon Developer Service on the same system the communication between
+the two uses pipes, not sockets and ports, so setting the port has no
+effect. In this scenario, it is possible to set the service to listen on
+a non-default port. Leave the panel on the default port, and connecting
+will work fine.
+
+Problems caused by existing installation of RADV Linux Vulkan driver
+--------------------------------------------------------------------
+
+Installations of Ubuntu 20.04 or newer may have the RADV open source Vulkan driver installed
+by default on the system. As a result, after an amdgpu-pro driver install,
+the default Vulkan ICD may be the RADV ICD.
+
+In order to capture a profile, Vulkan applications must be using the amdgpu-pro Vulkan ICD.
+The default Vulkan ICD can be overridden by setting the following environment variable
+before launching a Vulkan application: VK_ICD_FILENAMES=/etc/vulkan/icd.d/amd_icd64.json
+
+Problems caused by the presence of non-AMD GPUs and non-AMD CPUs with integrated graphics
+-----------------------------------------------------------------------------------------
+
+The presence of non-AMD GPU's and CPU's on your system can cause the failure to generate a profile
+or apps to not run at all.
+
+These problems typically occur with Vulkan apps in systems that have:
+
+1) A non-AMD CPU with in integrated non-AMD GPU
+
+2) A non-AMD discrete GPU
+
+Vulkan applications, by default, use GPU 0 which usually maps to the integrated GPU, or in some cases,
+the non-AMD discrete GPU. In both cases Vulkan apps will either fail to run, or RGP profiling will not work
+(no RGP overlay will be present in these cases).
+
+To avoid these issues:
+
+1) Disable any non-AMD integrated GPU's in the device manager
+2) Disable any non-AMD discrete GPU's in the device manager, and/or physically remove from the system.
+
+
+
