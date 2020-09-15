@@ -1,11 +1,111 @@
-﻿Radeon Developer Panel
+﻿Radeon™ Developer Panel
 ==========================
+
+The Radeon Developer Panel is part of a suite of tools that can be used
+by developers to optimize DirectX® 12, Vulkan® and OpenCL™ applications for AMD RDNA
+and GCN hardware. The suite is comprised of the following software:
+
+-  **Radeon Developer Mode Driver** – This is shipped as part of the AMD
+   public driver and supports the developer mode features
+   required for profiling and debugging.
+
+-  **Radeon Developer Service (RDS)** – A system tray application that
+   unlocks the Developer Mode Driver features and supports
+   communications with high level tools.
+
+-  **Radeon Developer Service - CLI (Headless RDS)** – A console (i.e.
+   non-GUI) application that unlocks the Developer Mode Driver features
+   and supports communication with high level tools.
+
+-  **Radeon Developer Panel (RDP)** – A GUI application that allows the
+   developer to configure driver settings and generate profiles from
+   DirectX12, Vulkan and OpenCL applications.
+
+-  **Radeon GPU Profiler (RGP)** – A GUI tool used to visualize and
+   analyze the profile data.
+
+-  **Radeon Memory Visualizer (RMV)** - A GUI tool used to visualize and analyze
+   the memory trace data.
+
+   This document describes how the Radeon Developer Panel can be used to capture
+   a profile or collect a memory trace for an application on AMD RDNA and GCN graphics hardware. The
+   Radeon Developer Panel connects to the Radeon Developer Service in
+   order to collect a profile or trace.
+
+   **Note:** By default, the driver allocates a maximum of 128 MB video
+   memory per Shader Engine to capture RGP profiles.
+
+Supported graphics APIs, RDNA and GCN hardware, and operating systems
+---------------------------------------------------------------------
+
+**Supported APIs**
+
+-  DirectX12
+
+-  Vulkan
+
+\ **Supported RDNA and GCN hardware**
+
+-  AMD Radeon RX 5500 series
+
+-  AMD Radeon RX 5600 series
+
+-  AMD Radeon RX 5700 and RX 5700 XT
+
+-  AMD Radeon VII
+
+-  AMD RX Vega 64 and RX Vega 56
+
+-  AMD Ryzen™ Processors with Radeon Vega Graphics
+
+-  AMD Radeon R9 Fury and Nano series
+
+-  AMD Radeon RX 400 and RX 500 series
+
+-  AMD Tonga R9 285, R9 380
+
+\ **Supported Operating Systems**
+
+-  Windows® 10
+
+-  Ubuntu 18.04.3 LTS
+
+-  Ubuntu 20.04.1 LTS
+
+Supported compute APIs, RDNA and GCN hardware, and operating systems
+--------------------------------------------------------------------
+
+**Supported APIs**
+
+-  OpenCL
+
+\ **Supported RDNA and GCN hardware**
+
+-  AMD Radeon RX 5500 series
+
+-  AMD Radeon RX 5600 series
+
+-  AMD Radeon RX 5700 and RX 5700 XT
+
+-  AMD Radeon VII
+
+-  AMD RX Vega 64 and RX Vega 56
+
+-  AMD Ryzen Processors with Radeon Vega Graphics
+
+\ **Supported Operating Systems**
+
+-  Windows® 10
+
+-  Ubuntu 18.04.3 LTS
+
+-  Ubuntu 20.04.1 LTS
 
 Initial setup
 =============
 
 **IMPORTANT:**
-      The application you want to trace must **NOT** already be
+      The application you want to profile or trace must **NOT** already be
       running. The panel needs to be configured in advance of starting your
       application.
 
@@ -142,7 +242,9 @@ The following are the configurable options for profiling
 - **OpenCL**:
    * Displays configuration options for the trigger mode and dispatch range for profile capture
    * Enable auto capture checkbox can enable/disable automatic capture for OpenCL
+
    .. image:: media/Workflow_Profiling_Config_OpenCL_AutoCapture.png
+
    * Dispatch Range allows for setting the start and stop dispatch indices to use during automatic profile capture
    * Dispatch Count specifies the number of dispatches to include in the profile capture
 
@@ -219,7 +321,7 @@ Capturing a profile can be achieved by the following:
 
 * **Use the Ctrl-Shift-C hotkey**
 
-   Using Ctrl-Shift-C hotkey on Windows or Linux (see :ref:`HotkeyCapture`) will capture a frame and write the results to disk.
+   Using Ctrl-Shift-C hotkey on Windows or Linux® (see :ref:`HotkeyCapture`) will capture a frame and write the results to disk.
 
 Example output:
 
