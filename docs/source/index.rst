@@ -32,6 +32,10 @@ and GCN hardware. The suite is comprised of the following software:
    Radeon Developer Panel connects to the Radeon Developer Service in
    order to collect a profile or trace.
 
+   **RGP documentation:** http://radeon-gpuprofiler.readthedocs.io/en/latest/
+
+   **RMV documentation:** https://radeon-memory-visualizer.readthedocs.io/en/latest/
+
    **Note:** By default, the driver allocates a maximum of 128 MB video
    memory per Shader Engine to capture RGP profiles.
 
@@ -46,11 +50,7 @@ Supported graphics APIs, RDNA and GCN hardware, and operating systems
 
 \ **Supported RDNA and GCN hardware**
 
--  AMD Radeon RX 5500 series
-
--  AMD Radeon RX 5600 series
-
--  AMD Radeon RX 5700 and RX 5700 XT
+-  AMD Radeon RX 5000 series
 
 -  AMD Radeon VII
 
@@ -81,11 +81,7 @@ Supported compute APIs, RDNA and GCN hardware, and operating systems
 
 \ **Supported RDNA and GCN hardware**
 
--  AMD Radeon RX 5500 series
-
--  AMD Radeon RX 5600 series
-
--  AMD Radeon RX 5700 and RX 5700 XT
+-  AMD Radeon RX 5000 series
 
 -  AMD Radeon VII
 
@@ -129,7 +125,7 @@ Initial setup
 
 2) Connect to a **Local** or **Remote** connection:
 
-      **Select an entry from the Connection dropdown,
+      Select an entry from the Connection dropdown,
       then click the “Connect” button. This will attempt to establish a connection to a **Radeon Developer Service**
 
 Note that the red indicator to the left of the “CONNECTION” tab will change to
