@@ -2,7 +2,7 @@
 ==========================
 
 The Radeon Developer Panel is part of a suite of tools that can be used
-by developers to optimize DirectX® 12, Vulkan® and OpenCL™ applications for AMD RDNA
+by developers to optimize DirectX® 12, Vulkan® and OpenCL™ applications for AMD RDNA™
 and GCN hardware. The suite is comprised of the following software:
 
 -  **Radeon Developer Mode Driver** – This is shipped as part of the AMD
@@ -39,7 +39,7 @@ and GCN hardware. The suite is comprised of the following software:
    **Note:** By default, the driver allocates a maximum of 128 MB video
    memory per Shader Engine to capture RGP profiles.
 
-Supported graphics APIs, RDNA and GCN hardware, and operating systems
+Graphics APIs, RDNA and GCN hardware, and operating systems
 ---------------------------------------------------------------------
 
 **Supported APIs**
@@ -49,6 +49,8 @@ Supported graphics APIs, RDNA and GCN hardware, and operating systems
 -  Vulkan
 
 \ **Supported RDNA and GCN hardware**
+
+-  AMD Radeon RX 6000 series
 
 -  AMD Radeon RX 5000 series
 
@@ -68,11 +70,11 @@ Supported graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  Windows® 10
 
--  Ubuntu 18.04.3 LTS
+-  Ubuntu 18.04.3 LTS (Vulkan only)
 
--  Ubuntu 20.04.1 LTS
+-  Ubuntu 20.04.1 LTS (Vulkan only)
 
-Supported compute APIs, RDNA and GCN hardware, and operating systems
+Compute APIs, RDNA and GCN hardware, and operating systems
 --------------------------------------------------------------------
 
 **Supported APIs**
@@ -92,10 +94,6 @@ Supported compute APIs, RDNA and GCN hardware, and operating systems
 \ **Supported Operating Systems**
 
 -  Windows® 10
-
--  Ubuntu 18.04.3 LTS
-
--  Ubuntu 20.04.1 LTS
 
 Initial setup
 =============
