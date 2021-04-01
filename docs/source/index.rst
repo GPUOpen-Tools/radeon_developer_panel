@@ -36,8 +36,9 @@ and GCN hardware. The suite is comprised of the following software:
 
    **RMV documentation:** https://radeon-memory-visualizer.readthedocs.io/en/latest/
 
-   **Note:** By default, the driver allocates a maximum of 128 MB video
-   memory per Shader Engine to capture RGP profiles.
+   **Note:** By default, the driver allocates a maximum of 75 MB video
+   memory per Shader Engine to capture RGP profiles. The driver allocates
+   300 MB video memory for the single shader engine with instruction tracing enabled.
 
 Graphics APIs, RDNA and GCN hardware, and operating systems
 ---------------------------------------------------------------------
@@ -70,9 +71,9 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  Windows® 10
 
--  Ubuntu 18.04.3 LTS (Vulkan only)
+-  Ubuntu 18.04 LTS (Vulkan only)
 
--  Ubuntu 20.04.1 LTS (Vulkan only)
+-  Ubuntu 20.04 LTS (Vulkan only)
 
 Compute APIs, RDNA and GCN hardware, and operating systems
 --------------------------------------------------------------------
@@ -82,6 +83,8 @@ Compute APIs, RDNA and GCN hardware, and operating systems
 -  OpenCL
 
 \ **Supported RDNA and GCN hardware**
+
+-  AMD Radeon RX 6000 series
 
 -  AMD Radeon RX 5000 series
 
@@ -304,6 +307,8 @@ The profiling UI has the following elements:
 - **Capture profile** - Captures a profile and writes to disk
 
 - **Enable instruction tracing** - Enables capturing detailed instruction data
+
+- **Collect cache counters** - Enables capturing GPU cache counter data
 
 - **Recently collected profiles** - Displays any recently collected profiles found in the output directory
 
@@ -605,18 +610,28 @@ connections list and click the Connect button again.
 Missing Timing Data for DirectX 12 Applications
 -----------------------------------------------
 
-To collect complete profile datasets for DirectX 12 applications, the
-user account in Windows needs to be associated with the “Performance Log
-Users” group. If these privileges aren't configured properly, profiles
+To collect complete profile datasets for DirectX 12 applications, two
+additional actions must be performed:
+
+1) The user account in Windows needs to be associated with the
+“Performance Log Users” group.
+
+2) The following REG_DWORD registry key must be set:
+**HKEY_LOCAL_MACHINE\\Software\\AMD\\RadeonTools\\RgpEnableEtw=1**
+
+If these two privileges aren't configured properly, profiles
 collected under the user’s account may not include all timing data for
 GPU Sync objects.
 
-A batch file is provided to add the current user to the group
+A batch file is provided to perform the above two actions
 (scripts\\AddUserToGroup.bat). The batch file should be run as
 administrator (Right click on file and select “Run as Administrator”).
 The script’s output is shown below:
 
 .. image:: media/Bat_1.png
+
+The actions performed by the batch fie can be undone by running the
+batch file with a **-\\-cleanup** command line switch.
 
 Alternatively, to manually add the active user to the proper group,
 follow these steps:
