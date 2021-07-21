@@ -245,6 +245,9 @@ The following are the configurable options for profiling
    * Dispatch Range allows for setting the start and stop dispatch indices to use during automatic profile capture
    * Dispatch Count specifies the number of dispatches to include in the profile capture
 
+**NOTE**
+   To reduce the chance of truncated profile data, OpenCL profiling is limited to 50 dispatches
+
 .. image:: media/Workflow_Profiling_Config_OpenCL.png
 
 
@@ -270,9 +273,10 @@ show up in the list of target applications. The **Profiling** feature also requi
 that only one application is started while using the feature so blocking applications, such as launchers
 that run before another application starts, can be useful.
 
-The panel has a default list of applications that are blocked. Applications
-can be added or removed from the list by selecting the **Blocked applications**
-subtab on the **System** tab then clicking one of the buttons below the list
+The panel maintains a list of default applications that are blocked on either Windows or Linux.
+This list can be viewed from the **Blocked applications** subtab on the **System** tab
+which will appear once a local or remote connection has been established.
+Applications can be added or removed from the list by clicking one of the buttons below the list
 of process names. When editing or removing entries, first select the process name
 from the list then click the edit or remove button. The list can also be restored
 to the default set of blocked applications. Right clicking on a process name in the
