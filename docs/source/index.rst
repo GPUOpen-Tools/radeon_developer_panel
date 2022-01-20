@@ -71,6 +71,8 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  Windows® 10
 
+-  Windows® 11
+
 -  Ubuntu 18.04 LTS (Vulkan only)
 
 -  Ubuntu 20.04 LTS (Vulkan only)
@@ -98,6 +100,8 @@ Compute APIs, RDNA and GCN hardware, and operating systems
 
 -  Windows® 10
 
+-  Windows® 11
+
 Initial setup
 =============
 
@@ -106,7 +110,7 @@ Initial setup
       running. The panel needs to be configured in advance of starting your
       application.
 
-1) Start the **RadeonDeveloperPanel.exe** on your local system. The
+1) Start the **RadeonDeveloperPanel(.exe)** on your local system. The
    panel will startup up with the Connection tab already highlighted
    (see below).
 
@@ -139,11 +143,11 @@ green to indicate that the connection was successful.
 Remote connections
 ==================
 
-1) Start the **RadeonDeveloperService.exe** on the **remote** system (the machine
+1) Start the **RadeonDeveloperService(.exe)** on the **remote** system (the machine
 where the application is to be run). Make a note of the remote system's IP address
 (open a command prompt and type 'ipconfig').
 
-2) Start the **RadeonDeveloperPanel.exe** on the local system. On the **CONNECTION**
+2) Start the **RadeonDeveloperPanel(.exe)** on the local system. On the **CONNECTION**
 tab, enter the IP address of the **remote** system in the **Host name** and then
 click the  “Connect” button.
 
@@ -322,9 +326,11 @@ Capturing a profile can be achieved by the following:
 
    Clicking the **Capture profile** button from the Profiling UI will capture a frame and write the results to disk.
 
-* **Use the Ctrl-Shift-C hotkey**
+* **Use the Ctrl-Alt-C hotkey**
 
-   Using Ctrl-Shift-C hotkey on Windows or Linux® (see :ref:`HotkeyCapture`) will capture a frame and write the results to disk.
+   Using Ctrl-Alt-C default hotkey on Windows or Linux® will capture a frame and write the results to disk.
+
+   This can be configured **before launching an application** by clicking the edit button to the right of the hotkey label and then entering a series of key presses.
 
 Example output:
 
@@ -430,26 +436,6 @@ a profile.
 | "~/.local/share/RadeonDeveloperPanel/log.txt"
 
 
-.. _HotkeyCapture:
-
-Capturing using the keyboard on Linux
-=====================================
-
-Some applications capture focus or run fullscreen which makes capturing
-a profile difficult. The Radeon Developer Panel provides a hotkey to allow
-capturing using the keyboard. Presently, this is Shift-Ctrl-C. By default,
-on Linux, the hotkey is only available when starting the Panel with elevated
-privileges (i.e. sudo RadeoDeveloperPanel). To use the hotkey while running
-Radeon Developer Panel with standard privileges, run the enable_kbd_dev_read.sh
-script found in the /scripts directory of the Radeon Developer Panel package.
-This script adds read privileges to the current user for the keyboard device
-files. It must be run each time the PC is restarted. By default, the keyboard
-device files are found in the path ‘/dev/input/by-path’, and end with
-‘event-kbd’. If this path doesn’t exist or the keyboard device has a different
-name, copy the KeyboardDevice.txt file from the /docs directory to the root
-folder where these tools are located and edit this file so it contains the full
-path and file name of the keyboard device on your system.
-
 The Radeon Developer Service
 ============================
 
@@ -536,7 +522,7 @@ Windows Firewall Blocking Incoming Connections
    when running the panel for the very first time. The panel tries to
    start the service automatically for local connections and this can
    fail. If you see this message try manually starting the
-   “RadeonDeveloperService.exe” and connect again.
+   “RadeonDeveloperService(.exe)” and connect again.
 
 3) **Remote connection attempts timing out.** When running the Radeon
    Developer Service on Windows, the Windows Firewall may attempt to
@@ -555,7 +541,7 @@ a. If “Cancel” was previously clicked in the above step during the first
    run, the exception for RDS can still be enabled by allowing it within
    the Windows Control Panel firewall settings. Navigate to the “Allow
    an app or feature” section, and ensure that the checkbox next to the
-   RadeonDeveloperService.exe entry is checked:
+   RadeonDeveloperService(.exe) entry is checked:
 
 .. image:: media/Firewall_2.png
 
