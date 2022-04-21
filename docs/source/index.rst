@@ -39,6 +39,7 @@ and GCN hardware. The suite is comprised of the following software:
    **Note:** By default, the driver allocates a maximum of 75 MB video
    memory per Shader Engine to capture RGP profiles. The driver allocates
    300 MB video memory for the single shader engine with instruction tracing enabled.
+   As of v2.6 this can now be configured in the workflow settings.
 
 Graphics APIs, RDNA and GCN hardware, and operating systems
 ---------------------------------------------------------------------
@@ -136,6 +137,10 @@ Initial setup
 Note that the red indicator to the left of the “CONNECTION” tab will change to
 green to indicate that the connection was successful.
 
+Connections to applications will timeout after a brief period of no API calls being made. For example, a timeout will likely occur when a 
+connected application is suspended by a debug breakpoint or if the application is only occasionally refreshing.
+Enabling the "Disable client timeout" toggle will stop Radeon Developer Panel disconnecting from inactive clients.
+
 **NOTE**
    For Local connections, starting **Radeon Developer Service** is optional.
    For Remote Connections, a **Radeon Developer Service** instance must be started on the remote machine (see below)
@@ -150,6 +155,8 @@ where the application is to be run). Make a note of the remote system's IP addre
 2) Start the **RadeonDeveloperPanel(.exe)** on the local system. On the **CONNECTION**
 tab, enter the IP address of the **remote** system in the **Host name** and then
 click the  “Connect” button.
+
+Optionally a nickname for the connection can be provided. This name will show in parentheses in the Connection dropdown.
 
 System
 ======
@@ -167,7 +174,7 @@ The system tab contains various panels for configuration:
 
 - :ref:`BlockedApplications`- List of applications blocked from driver connection
 
-- :ref:`Paths` - List of executable paths to tools used to consume output of **Radeon Developer Panel** such as **Radeon GPU Profiler** or **Radeon Memory Visualizer**
+- Modules - List of modules and their version numbers for the current connection
 
 .. _MyApplications:
 
@@ -235,6 +242,11 @@ The following are the configurable options for profiling
    * Defines the output path for saving captured profiles
    * Use the macro **$(APP_NAME)** to insert the connected application's name into path
 
+- **SQTT Buffer Size**:
+   * Defines the size of the buffer where SQTT data will be stored
+   * If a profile has missing data, the SQTT buffer size can be increased to potentially remedy the issue
+   * If an application experiences graphical corruption, decreasing the SQTT buffer size can potentially remedy the issue
+
 - **Vulkan/DirectX12**:
    * Displays information about the active trigger mode for profile capture
 
@@ -288,20 +300,6 @@ list will display context menu options to add, remove, or edit.
 
 .. image:: media/Blocked_apps_1.png
 
-.. _Paths:
-
-Paths
------
-
-After capturing a profile or trace for an application, it is often desirable to open the output
-file using the associated tool such as **Radeon GPU Profiler** or **Radeon Memory Visualizer**.
-
-The paths pane allows for setting the global path to the tool to be used by Radeon Developer Panel to open
-captured profiles or traces. A **Restore Defaults** button allows for resetting the path values to the default value
-pointing to the panel's executable path directory containing **Radeon GPU Profiler** and **Radeon Memory Visualizer**
-
-.. image:: media/Paths_1.png
-
 How to profile your application
 ===============================
 
@@ -316,7 +314,7 @@ The profiling UI has the following elements:
 
 - **Enable instruction tracing** - Enables capturing detailed instruction data
 
-- **Collect cache counters** - Enables capturing GPU cache counter data
+- **Collect counters** - Enables capturing GPU cache counter data. Systems with an AMD Radeon RX 6000 series GPU will also collect raytracing counter data.
 
 - **Recently collected profiles** - Displays any recently collected profiles found in the output directory
 
@@ -339,6 +337,26 @@ Example output:
 **NOTE**
    The profile output directory is specified as part of the associated **workflow** with this application
    entry in the **My applications** list
+
+Settings
+========
+
+At any time the Radeon Developer Panel settings can be accessed by clicking the gear button in the upper right corner. This will open the
+settings pane.
+
+After capturing a profile or trace for an application, it is often desirable to open the output
+file using the associated tool such as **Radeon GPU Profiler** and **Radeon Memory Visualizer**.
+
+The settings pane allows for choosing the global path to the tool to be used by Radeon Developer Panel to open
+captured profiles or traces.
+
+Additionally, the settings pane contains the Auto open traces toggle which will cause Radeon Developer Panel to open a captured
+profile or trace with the correct tool as soon as it is taken.
+
+A **Restore Defaults** button allows for resetting the path and auto open settings to their default values. For the paths, this
+will reset them to the panel's executable path directory.
+
+.. image:: media/Paths_1.png
 
 How to memory trace your application
 ====================================
