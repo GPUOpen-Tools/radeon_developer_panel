@@ -519,7 +519,7 @@ Cleanup After a RadeonDeveloperServiceCLI Crash
 -----------------------------------------------
 
 If the RadeonDeveloperServiceCLI executable crashes on Linux, shared
-memory may need to be cleaned up by running the RemoveSharedMemory.sh
+memory may need to be cleaned up by running the remove_shared_memory.sh
 script located in the script folder of the RGP release kit. Run the
 script with elevated privileges using sudo. If this fails to work,
 try starting the panel with elevated privileges.
@@ -598,12 +598,22 @@ only modifiable by root, so the application being profiled would have to
 be run as root in order for it to modify the clock mode. It is possible
 to modify the permissions for the file instead so that it can be written
 by unprivileged users. The Radeon GPU Profiler package includes the
-“\ **scripts/EnableSetClockMode.sh**\ ” script which will allow setting
-GPU clock mode in cases where the target application is not, or cannot,
-run as root. **Execute this script before running the Radeon Developer
-Service and target application,** and the GPU clock mode can be updated
-correctly at runtime. This script needs to be run each time you reboot
-your machine; the file permissions do not survive system reboots.
+“\ **scripts/setup.sh**\ ” script which when run as root will set the
+GPU clock mode. **Execute this script before running the Radeon Developer
+Service and target application,** and the GPU clock mode will be updated
+correctly at runtime.
+
+**NOTE**
+    This script needs to be run each time you reboot
+    your machine; the file permissions do not survive system reboots.
+
+Enabling support for RMV tracing on Linux
+-----------------------------------------
+
+RMV tracing on Linux requires specific kernel tracing features to be enabled.
+The **scripts/setup.sh** script file when run as root will setup the necessary kernel tracing components
+to support RMV capture. Please run this script prior to launching
+**Radeon Developer Service** or **Radeon Developer Panel**.
 
 Radeon Developer Panel connection issues on Linux
 -------------------------------------------------
