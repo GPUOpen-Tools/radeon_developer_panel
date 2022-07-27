@@ -27,14 +27,19 @@ and GCN hardware. The suite is comprised of the following software:
 -  **Radeon Memory Visualizer (RMV)** - A GUI tool used to visualize and analyze
    the memory trace data.
 
+-  **Radeon Raytracing Analyzer (RRA)** - A GUI tool used to visualize and analyze
+   the raytracing data.
+
    This document describes how the Radeon Developer Panel can be used to capture
-   a profile or collect a memory trace for an application on AMD RDNA and GCN graphics hardware. The
+   a profile, memory trace or a raytracing scene for an application on AMD RDNA and GCN graphics hardware. The
    Radeon Developer Panel connects to the Radeon Developer Service in
-   order to collect a profile or trace.
+   order to collect a profile, trace or scene.
 
    **RGP documentation:** http://radeon-gpuprofiler.readthedocs.io/en/latest/
 
    **RMV documentation:** https://radeon-memory-visualizer.readthedocs.io/en/latest/
+
+   **RRA documentation:** http://radeon-raytracing-analyzer.readthedocs.io/en/latest/
 
    **Note:** By default, the driver allocates a maximum of 75 MB video
    memory per Shader Engine to capture RGP profiles. The driver allocates
@@ -78,6 +83,8 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  Ubuntu 20.04 LTS (Vulkan only)
 
+-  Ubuntu 22.04 LTS (Vulkan only)
+
 Compute APIs, RDNA and GCN hardware, and operating systems
 --------------------------------------------------------------------
 
@@ -107,7 +114,7 @@ Initial setup
 =============
 
 **IMPORTANT:**
-      The application you want to profile or trace must **NOT** already be
+      The application you want to profile, trace or capture scenes from must **NOT** already be
       running. The panel needs to be configured in advance of starting your
       application.
 
@@ -182,7 +189,7 @@ My applications
 ---------------
 
 The **My applications** pane in Radeon Developer Panel contains the list of applications the user
-will want to connect with to profile or trace.
+will want to connect with to capture a profile, trace or scene from.
 
 There are two modes of connection available.
 
@@ -216,6 +223,14 @@ start a driver connection.
 When a connection to the client application has
 been established, the panel will then switch to the **Applications** tab.
 
+When in **Basic Mode**, the global workflow can also be changed in the **Applications** tab. The dropdown on this tab is synced with the one in the **My applications** pane.
+
+.. image:: media/Global_Workflow_1.png
+
+In **Advanced Mode**, the workflow for a specific application can also be changed by selecting it in the **Applications** tab and changing the Workflow dropdown. Any changes made to this dropdown will be reflected in the **My applications** pane.
+
+.. image:: media/Advanced_Mode_App_Workflow_1.png
+
 .. _MyWorkflows:
 
 My workflows
@@ -224,12 +239,12 @@ My workflows
 The **My workflows** pane in Radeon Developer Panel allows the user to specify a set of enabled features and pre-launch
 configuration options to be used when connecting an application.
 
-Defining a workflow to contain these pre-launch settings such as the profile/trace output
+Defining a workflow to contain these pre-launch settings such as the profile/trace/scene output
 path or capture mode allows for re-use of the settings across multiple applications.
 
 .. image:: media/Workflow_1.png
 
-Each workflow contains a list of features such as **Profiling**, **MemoryTrace**, or **DeviceClocks** which
+Each workflow contains a list of features such as **Profiling**, **MemoryTrace**, **Raytracing**, or **DeviceClocks** which
 can be enabled or disabled
 
 There are also configuration options available for these features:
@@ -277,6 +292,16 @@ The following are the configurable options for memory trace
 
 .. image:: media/Workflow_MemoryTrace_Config.png
 
+**Raytracing Trace Configuration**
+
+The following are the configurable options for raytracing
+
+- **Output Path**:
+   * Defines the output path for saving captured raytracing scenes
+   * Use the macro **$(APP_NAME)** to insert the connected application's name into path
+
+.. image:: media/Workflow_Raytracing_Config.png
+
 .. _BlockedApplications:
 
 Blocked applications
@@ -316,6 +341,8 @@ The profiling UI has the following elements:
 
 - **Collect counters** - Enables capturing GPU cache counter data. Systems with an AMD Radeon RX 6000 series GPU will also collect raytracing counter data.
 
+- **Delay capture** - If this is enabled, pressing the capture profile button or triggering the hotkey will first wait the entered number of milliseconds before capturing a profile.
+
 - **Recently collected profiles** - Displays any recently collected profiles found in the output directory
 
 Capturing a profile can be achieved by the following:
@@ -344,14 +371,14 @@ Settings
 At any time the Radeon Developer Panel settings can be accessed by clicking the gear button in the upper right corner. This will open the
 settings pane.
 
-After capturing a profile or trace for an application, it is often desirable to open the output
-file using the associated tool such as **Radeon GPU Profiler** and **Radeon Memory Visualizer**.
+After capturing a profile, trace or scene from an application, it is often desirable to open the output
+file using the associated tool such as **Radeon GPU Profiler**, **Radeon Memory Visualizer** or **Radeon Raytracing Analyzer**.
 
 The settings pane allows for choosing the global path to the tool to be used by Radeon Developer Panel to open
-captured profiles or traces.
+captured profiles, traces and scenes.
 
 Additionally, the settings pane contains the Auto open traces toggle which will cause Radeon Developer Panel to open a captured
-profile or trace with the correct tool as soon as it is taken.
+profile, trace or scene with the correct tool as soon as it is captured.
 
 A **Restore Defaults** button allows for resetting the path and auto open settings to their default values. For the paths, this
 will reset them to the panel's executable path directory.
@@ -409,6 +436,41 @@ Example output:
       Once a memory trace has finished either through closing the application or
       through clicking the **Dump trace** button. The application **MUST** be
       closed and re-launched to start a new memory trace.
+
+
+How to capture a raytracing scene from your application
+=======================================================
+
+Upon running an application successfully the panel will have switched
+to the **Applications** tab shown here:
+
+.. image:: media/Raytracing_1.png
+
+The raytracing UI has the following elements:
+
+- **Capture scene** - Captures a scene and writes to disk
+
+- **Recently collected scenes** - Displays any recently collected scenes found in the output directory
+
+Capturing a scene can be achieved by the following:
+
+* **Click the Capture scene button**
+
+   Clicking the **Capture scene** button from the Raytracing UI will capture a raytracing scene and write the results to disk.
+
+* **Use the Ctrl-F8 hotkey**
+
+   Using Ctrl-F8 default hotkey on Windows or Linux® will capture a raytracing scene and write the results to disk.
+
+   This can be configured **before launching an application** by clicking the edit button to the right of the hotkey label and then entering a series of key presses.
+
+Example output:
+
+   sample-20220705-104021.rra
+
+**NOTE**
+   The scene output directory is specified as part of the associated **workflow** with this application
+   entry in the **My applications** list
 
 
 Using the Clock settings
@@ -511,6 +573,13 @@ before starting the Radeon Developer Panel. If the service isn’t
 running, the Radeon Developer Panel will automatically start the UI
 version of the Radeon Developer Service, which may not be what is
 required.
+
+Bug Report
+==========
+
+At any time, a bug report template can be generated by clicking the bug button in the upper right corner. This will copy a template to your clipboard with relevant information such as the graphics cards and operating system of the connected system.
+
+When reporting bugs, please use the generated template and fill in the description and proper steps to reproduce the issue marked by the **"(fill me in)"** sections.
 
 Known Issues
 ============
