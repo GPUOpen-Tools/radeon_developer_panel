@@ -35,11 +35,11 @@ and GCN hardware. The suite is comprised of the following software:
    Radeon Developer Panel connects to the Radeon Developer Service in
    order to collect a profile, trace or scene.
 
-   **RGP documentation:** http://radeon-gpuprofiler.readthedocs.io/en/latest/
+   **RGP documentation:** https://radeon-gpuprofiler.readthedocs.io/en/latest/
 
    **RMV documentation:** https://radeon-memory-visualizer.readthedocs.io/en/latest/
 
-   **RRA documentation:** http://radeon-raytracing-analyzer.readthedocs.io/en/latest/
+   **RRA documentation:** https://radeon-raytracing-analyzer.readthedocs.io/en/latest/
 
    **Note:** By default, the driver allocates a maximum of 75 MB video
    memory per Shader Engine to capture RGP profiles. The driver allocates
@@ -56,6 +56,8 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 -  Vulkan
 
 \ **Supported RDNA and GCN hardware**
+
+-  AMD Radeon RX 7000 series
 
 -  AMD Radeon RX 6000 series
 
@@ -79,10 +81,6 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  Windows® 11
 
--  Ubuntu 18.04 LTS (Vulkan only)
-
--  Ubuntu 20.04 LTS (Vulkan only)
-
 -  Ubuntu 22.04 LTS (Vulkan only)
 
 Compute APIs, RDNA and GCN hardware, and operating systems
@@ -92,7 +90,11 @@ Compute APIs, RDNA and GCN hardware, and operating systems
 
 -  OpenCL
 
+-  HIP
+
 \ **Supported RDNA and GCN hardware**
+
+-  AMD Radeon RX 7000 series
 
 -  AMD Radeon RX 6000 series
 
@@ -182,6 +184,9 @@ The system tab contains various panels for configuration:
 - :ref:`BlockedApplications`- List of applications blocked from driver connection
 
 - Modules - List of modules and their version numbers for the current connection
+
+- :ref:`SystemInformation` - Lists detailed hardware and system information for the active Radeon Developer Panel connection
+
 
 .. _MyApplications:
 
@@ -274,10 +279,13 @@ The following are the configurable options for profiling
    .. image:: media/Workflow_Profiling_Config_OpenCL_AutoCapture.png
 
    * Dispatch Range allows for setting the start and stop dispatch indices to use during automatic profile capture
-   * Dispatch Count specifies the number of dispatches to include in the profile capture
+
+   .. image:: media/Workflow_Profiling_Config_OpenCL_AutoCapture_Timer.png
+
+   * Dispatch count and capture time specifies the number of dispatches to capture after a specified elapsed time
 
 **NOTE**
-   To reduce the chance of truncated profile data, OpenCL profiling is limited to 50 dispatches
+   To reduce the chance of truncated profile data, OpenCL profiling is limited to 10000 dispatches
 
 .. image:: media/Workflow_Profiling_Config_OpenCL.png
 
@@ -323,7 +331,31 @@ from the list then click the edit or remove button. The list can also be restore
 to the default set of blocked applications. Right clicking on a process name in the
 list will display context menu options to add, remove, or edit.
 
+The blocked applications list supports wildcard matching. The following syntax is supported:
+    * ? : Matches exactly one of any character
+    * [...] : Matches one character in a set of characters
+    * \* : Matches zero or more of any character
+
+These can be escaped by using backslash.
+
+Here are some examples of blocked application items that leverage the wildcard matching:
+    * [Gg]ears.exe : Blocks any application called gears.exe with either a lowercase or uppercase G
+    * gpu_info\* : Blocks any applications who's name starts with gpu_info
+    * test?.exe : Blocks any application called test with a single character suffix -- e.g. test1 or test6
+
 .. image:: media/Blocked_apps_1.png
+
+.. _SystemInformation:
+
+System information
+------------------
+
+The system information pane lists detailed hardware and system information for the active Radeon Developer Panel connection. 
+
+Pressing the Export button will open a dialog to choose a folder. Upon selecting a folder, the system information will be exported to that folder
+as a JSON file.
+
+.. image:: media/System_Info.png
 
 How to profile your application
 ===============================
@@ -339,7 +371,7 @@ The profiling UI has the following elements:
 
 - **Enable instruction tracing** - Enables capturing detailed instruction data
 
-- **Collect counters** - Enables capturing GPU cache counter data. Systems with an AMD Radeon RX 6000 series GPU will also collect raytracing counter data.
+- **Collect counters** - Enables capturing GPU cache counter data. Systems with an AMD Radeon RX 6000 or AMD Radeon RX 7000 series GPU will also collect raytracing counter data.
 
 - **Delay capture** - If this is enabled, pressing the capture profile button or triggering the hotkey will first wait the entered number of milliseconds before capturing a profile.
 
@@ -449,6 +481,8 @@ to the **Applications** tab shown here:
 The raytracing UI has the following elements:
 
 - **Capture scene** - Captures a scene and writes to disk
+
+- **Delay capture** - If this is enabled, pressing the capture scene button or triggering the hotkey will first wait the entered number of milliseconds before capturing.
 
 - **Recently collected scenes** - Displays any recently collected scenes found in the output directory
 
