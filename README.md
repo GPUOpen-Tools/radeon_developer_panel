@@ -1,6 +1,6 @@
 Radeon Developer Panel
 ----------------------
-The Radeon Developer Panel (RDP) is a software tool that allows users to generate RGP profiles, RMV traces, and RRA captures on Radeon GPUs.
+The Radeon Developer Panel (RDP) is a software tool that allows users to capture RGP profiles, RMV traces, RRA scenes, and RGD crash analysis dumps on Radeon GPUs.
 
 The Radeon Developer Panel consists of 2 main components :
 
