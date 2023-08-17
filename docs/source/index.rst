@@ -24,6 +24,8 @@ and GCN hardware. The suite is comprised of the following software:
 -  **Radeon GPU Profiler (RGP)** – A GUI tool used to visualize and
    analyze the profile data.
 
+-  **Radeon GPU Detective (RGD)** - A command line tool that assists developers in post-mortem analysis of GPU crashes.
+
 -  **Radeon Memory Visualizer (RMV)** - A GUI tool used to visualize and analyze
    the memory trace data.
 
@@ -41,7 +43,10 @@ and GCN hardware. The suite is comprised of the following software:
 
    **RRA documentation:** https://radeon-raytracing-analyzer.readthedocs.io/en/latest/
 
-   **Note:** By default, the driver allocates a maximum of 75 MB video
+   **RGD documentation:** https://radeon-gpu-detective.readthedocs.io/en/latest
+
+.. NOTE::
+   By default, the driver allocates a maximum of 75 MB video
    memory per Shader Engine to capture RGP profiles. The driver allocates
    300 MB video memory for the single shader engine with instruction tracing enabled.
    As of v2.6 this can now be configured in the workflow settings.
@@ -67,7 +72,7 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  AMD RX Vega 64 and RX Vega 56
 
--  AMD Ryzen™ Processors with Radeon Vega Graphics
+-  AMD Ryzen™ Processors with Radeon Graphics
 
 -  AMD Radeon R9 Fury and Nano series
 
@@ -104,7 +109,7 @@ Compute APIs, RDNA and GCN hardware, and operating systems
 
 -  AMD RX Vega 64 and RX Vega 56
 
--  AMD Ryzen Processors with Radeon Vega Graphics
+-  AMD Ryzen Processors with Radeon Graphics
 
 \ **Supported Operating Systems**
 
@@ -115,7 +120,7 @@ Compute APIs, RDNA and GCN hardware, and operating systems
 Initial setup
 =============
 
-**IMPORTANT:**
+.. IMPORTANT::
       The application you want to profile, trace or capture scenes from must **NOT** already be
       running. The panel needs to be configured in advance of starting your
       application.
@@ -150,7 +155,7 @@ Connections to applications will timeout after a brief period of no API calls be
 connected application is suspended by a debug breakpoint or if the application is only occasionally refreshing.
 Enabling the "Disable client timeout" toggle will stop Radeon Developer Panel disconnecting from inactive clients.
 
-**NOTE**
+.. NOTE::
    For Local connections, starting **Radeon Developer Service** is optional.
    For Remote Connections, a **Radeon Developer Service** instance must be started on the remote machine (see below)
 
@@ -194,7 +199,7 @@ My applications
 ---------------
 
 The **My applications** pane in Radeon Developer Panel contains the list of applications the user
-will want to connect with to capture a profile, trace or scene from.
+will want to connect with to capture a profile, trace, scene, or crash analysis from.
 
 There are two modes of connection available.
 
@@ -212,12 +217,12 @@ Application entries can be added to the list using **Advanced Mode** as follows:
    - Specify the workflow to be used for pre-launch configuration by this entry using the **Workflow** dropdown.
    - Specify the **API** type to check against for this application from the dropdown.
 
-**IMPORTANT**
+.. IMPORTANT::
    Applications launched while using **Basic Mode** will automatically attempt a connection and (if an entry does not already exist in table)
    have an entry created in the table using the current workflow selected in the **Workflow** dropdown. If an entry existed for the application, then the
    global workflow chosen in the **Basic Mode** will override it.  A proper warning message is shown in the status column in this view.
 
-**IMPORTANT**
+.. IMPORTANT::
       The **API** specified works as a filter against the client application
       accepting the driver connection. If you are unsure of what **API** is being used
       or don't care use the default **Auto**
@@ -284,7 +289,7 @@ The following are the configurable options for profiling
 
    * Dispatch count and capture time specifies the number of dispatches to capture after a specified elapsed time
 
-**NOTE**
+.. NOTE::
    To reduce the chance of truncated profile data, OpenCL profiling is limited to 10000 dispatches
 
 .. image:: media/Workflow_Profiling_Config_OpenCL.png
@@ -309,6 +314,30 @@ The following are the configurable options for raytracing
    * Use the macro **$(APP_NAME)** to insert the connected application's name into path
 
 .. image:: media/Workflow_Raytracing_Config.png
+
+**Crash Analysis Configuration**
+
+The following are the configurable options for crash analysis
+
+- **Directory to store your dumps**
+   * Defines the output path for captured crash dumps
+   * Use the macro **$(APP_NAME)** to insert the connected application's name into path
+
+- **Automatic crash summary generation**
+
+   For convenience, enabling these options will generate the respective crash dump summaries automatically upon capture.
+
+- **Display execution marker source**
+
+   If checked, each marker node in the generated summary file's
+   execution marker tree will contain a tag specifying the source
+   that generated the marker (such as Application, Driver, etc.).
+
+- **Expand all execution marker nodes**
+
+   If checked, all execution marker nodes in the marker tree will be expanded.
+
+.. image:: media/Workflow_CrashAnalysis.png
 
 .. _BlockedApplications:
 
@@ -393,7 +422,7 @@ Example output:
 
    sample-20200908-092653.rgp
 
-**NOTE**
+.. NOTE::
    The profile output directory is specified as part of the associated **workflow** with this application
    entry in the **My applications** list
 
@@ -404,10 +433,11 @@ At any time the Radeon Developer Panel settings can be accessed by clicking the 
 settings pane.
 
 After capturing a profile, trace or scene from an application, it is often desirable to open the output
-file using the associated tool such as **Radeon GPU Profiler**, **Radeon Memory Visualizer** or **Radeon Raytracing Analyzer**.
+file using the associated tool such as **Radeon GPU Profiler**, **Radeon Memory Visualizer**, **Radeon Raytracing Analyzer**, or **Radeon GPU Detective**
 
 The settings pane allows for choosing the global path to the tool to be used by Radeon Developer Panel to open
-captured profiles, traces and scenes.
+captured profiles, traces and scenes. For convenience, using the **Locate Radeon Developer Tool Suite** button will allow for selection
+of a downloaded Radeon Developer Tool Suite package and automatically configure all paths.
 
 Additionally, the settings pane contains the Auto open traces toggle which will cause Radeon Developer Panel to open a captured
 profile, trace or scene with the correct tool as soon as it is captured.
@@ -425,7 +455,7 @@ to the **Applications** tab shown here:
 
 .. image:: media/MemoryTrace_01.png
 
-**NOTE**
+.. IMPORTANT::
    Memory tracing will have been implicitly started when the application was launched.
 
 The memory trace UI has the following elements:
@@ -460,11 +490,11 @@ Example output:
 
    sample_20200316-143712.rmv
 
-**NOTE**
+.. NOTE::
    The trace output directory is specified as part of the associated **workflow** with this application
    entry in the **My applications** list
 
-**IMPORTANT:**
+.. IMPORTANT::
       Once a memory trace has finished either through closing the application or
       through clicking the **Dump trace** button. The application **MUST** be
       closed and re-launched to start a new memory trace.
@@ -502,10 +532,71 @@ Example output:
 
    sample-20220705-104021.rra
 
-**NOTE**
+.. NOTE::
    The scene output directory is specified as part of the associated **workflow** with this application
    entry in the **My applications** list
 
+How to capture a GPU crash dump from your application
+=======================================================
+
+.. IMPORTANT::
+    The following are requirements for crash analysis feature support
+
+    **OS**: Windows® 10 or Windows® 11
+
+    **GPU supported**: AMD Radeon RX 6000 or AMD Radeon RX 7000 series GPU
+
+    **Minimum supported driver**: AMD Radeon Adrenalin Software Driver version 23.7.2
+
+
+Before running an application to generate a crash dump, there are
+a few settings that can be configured in the workflow pane shown here:
+
+- **Directory to store your dumps** - Path on disk where crash dumps are written out.
+
+- **Automatic crash summary generation**
+
+   For convenience, enabling these options will generate the respective crash dump summaries automatically upon capture.
+
+- **Display execution marker source**
+
+   If checked, each marker node in the generated summary file's
+   execution marker tree will contain a tag specifying the source
+   that generated the marker (such as Application, Driver, etc.).
+
+- **Expand all execution marker nodes**
+
+   If checked, all execution marker nodes in the marker tree will be expanded.
+
+.. image:: media/CrashDump_Workflow.png
+
+
+Upon running an application successfully the panel will have switched
+to the **Applications** tab shown here:
+
+.. image:: media/CrashDump_1.png
+
+Once active, a GPU crash dump will be created once a TDR occurs.
+
+Example output:
+
+   sample-20230220-103954.rgd
+
+Right clicking on a dump in the recently collected dumps pane will open a context menu with options to open the
+generated crash summaries in the text editor specified in the Radeon Developer Panel settings. If a summary has not been
+generated, an option will be present to first generate the summary using the Radeon GPU Detective CLI, then open
+the summary. Deleting a dump from this context menu will also remove any summaries that have been generated.
+
+.. image:: media/CrashDump_2.png
+
+.. NOTE::
+
+    The Radeon GPU Detective executable path must be setup properly in the settings
+    configuration to generate a crash summary.
+
+Shown here is a sample crash dump summary:
+
+.. image:: media/CrashDump_Output.png
 
 Using the Clock settings
 ========================
@@ -528,7 +619,7 @@ profiles of the same application.
 When capturing a profile, the clock settings here are not used since the
 driver forces a profile to take place using peak clocks.
 
-**NOTE**
+.. IMPORTANT::
    A running, connected application is required in order to change the GPU clock modes
 
 
@@ -584,16 +675,17 @@ Double click the Radeon Developer Service system tray icon again or
 right-click on the system tray icon and select ‘configure’ from the
 context menu to close the configuration window.
 
-**Please note** that when running both the Radeon Developer Panel and
-the Radeon Developer Service on the same system the communication
-between the two uses pipes, not sockets and ports, so setting the port
-has no effect.
+.. IMPORTANT::
+    When running both the Radeon Developer Panel and
+    the Radeon Developer Service on the same system the communication
+    between the two uses pipes, not sockets and ports, so setting the port
+    has no effect.
 
 Radeon Developer Service for headless GPU systems
 -------------------------------------------------
 
 RadeonDeveloperServiceCLI(.exe) – Command line version for use with
-headless GPU systems where no UI can be provided. NOTE: This version can
+headless GPU systems where no UI can be provided. This version can
 also run on a system that has a monitor and UI.
 
 The following command line options are available for
@@ -602,11 +694,12 @@ RadeonDeveloperServiceCLI:
 1) **-- port <port number>** *Overrides the default listener port used
    by the service (27300 is the default).*
 
-**Please note** that the service will need to be explicitly started
-before starting the Radeon Developer Panel. If the service isn’t
-running, the Radeon Developer Panel will automatically start the UI
-version of the Radeon Developer Service, which may not be what is
-required.
+.. NOTE::
+    The service will need to be explicitly started
+    before starting the Radeon Developer Panel. If the service isn’t
+    running, the Radeon Developer Panel will automatically start the UI
+    version of the Radeon Developer Service, which may not be what is
+    required.
 
 Bug Report
 ==========
@@ -671,7 +764,8 @@ a. If “Cancel” was previously clicked in the above step during the first
 a. Alternatively, disable the Windows Firewall entirely will also allow
    RDS to be connected to.
 
-   **NOTE** The Windows firewall alert in no way indicates that the Radeon
+.. NOTE::
+   The Windows firewall alert in no way indicates that the Radeon
    Developer tools are trying to communicate to an AMD server over the
    internet. The Radeon Developer tools do not attempt to connect to a remote
    AMD server of any description and do not send personal or system information
@@ -706,7 +800,7 @@ GPU clock mode. **Execute this script before running the Radeon Developer
 Service and target application,** and the GPU clock mode will be updated
 correctly at runtime.
 
-**NOTE**
+.. NOTE::
     This script needs to be run each time you reboot
     your machine; the file permissions do not survive system reboots.
 
@@ -790,12 +884,13 @@ follow these steps:
 Radeon Developer Service Port numbers
 -------------------------------------
 
-Please note that when running both the Radeon Developer Panel and the
-Radeon Developer Service on the same system the communication between
-the two uses pipes, not sockets and ports, so setting the port has no
-effect. In this scenario, it is possible to set the service to listen on
-a non-default port. Leave the panel on the default port, and connecting
-will work fine.
+.. NOTE::
+    When running both the Radeon Developer Panel and the
+    Radeon Developer Service on the same system the communication between
+    the two uses pipes, not sockets and ports, so setting the port has no
+    effect. In this scenario, it is possible to set the service to listen on
+    a non-default port. Leave the panel on the default port, and connecting
+    will work fine.
 
 Problems caused by existing installation of RADV Linux Vulkan driver
 --------------------------------------------------------------------

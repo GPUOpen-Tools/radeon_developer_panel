@@ -1,1 +1,4 @@
 /* Copyright (c) 2022 AMD Inc. All rights reserved. */
+.wy-nav-content {
+    max-width: none;
+}
