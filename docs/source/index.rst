@@ -3,7 +3,7 @@
 
 The Radeon Developer Panel is part of a suite of tools that can be used
 by developers to optimize DirectX® 12, Vulkan® and OpenCL™ applications for AMD RDNA™
-and GCN hardware. The suite is comprised of the following software:
+hardware. The suite is comprised of the following software:
 
 -  **Radeon Developer Mode Driver** – This is shipped as part of the AMD
    public driver and supports the developer mode features
@@ -33,7 +33,7 @@ and GCN hardware. The suite is comprised of the following software:
    the raytracing data.
 
    This document describes how the Radeon Developer Panel can be used to capture
-   a profile, memory trace or a raytracing scene for an application on AMD RDNA and GCN graphics hardware. The
+   a profile, memory trace or a raytracing scene for an application on AMD RDNA graphics hardware. The
    Radeon Developer Panel connects to the Radeon Developer Service in
    order to collect a profile, trace or scene.
 
@@ -51,7 +51,7 @@ and GCN hardware. The suite is comprised of the following software:
    300 MB video memory for the single shader engine with instruction tracing enabled.
    As of v2.6 this can now be configured in the workflow settings.
 
-Graphics APIs, RDNA and GCN hardware, and operating systems
+Graphics APIs, RDNA hardware, and operating systems
 ---------------------------------------------------------------------
 
 **Supported APIs**
@@ -60,7 +60,7 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  Vulkan
 
-\ **Supported RDNA and GCN hardware**
+\ **Supported RDNA hardware**
 
 -  AMD Radeon RX 7000 series
 
@@ -68,17 +68,7 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  AMD Radeon RX 5000 series
 
--  AMD Radeon VII
-
--  AMD RX Vega 64 and RX Vega 56
-
 -  AMD Ryzen™ Processors with Radeon Graphics
-
--  AMD Radeon R9 Fury and Nano series
-
--  AMD Radeon RX 400 and RX 500 series
-
--  AMD Tonga R9 285, R9 380
 
 \ **Supported Operating Systems**
 
@@ -88,7 +78,7 @@ Graphics APIs, RDNA and GCN hardware, and operating systems
 
 -  Ubuntu 22.04 LTS (Vulkan only)
 
-Compute APIs, RDNA and GCN hardware, and operating systems
+Compute APIs, RDNA hardware, and operating systems
 --------------------------------------------------------------------
 
 **Supported APIs**
@@ -97,17 +87,13 @@ Compute APIs, RDNA and GCN hardware, and operating systems
 
 -  HIP
 
-\ **Supported RDNA and GCN hardware**
+\ **Supported RDNA hardware**
 
 -  AMD Radeon RX 7000 series
 
 -  AMD Radeon RX 6000 series
 
 -  AMD Radeon RX 5000 series
-
--  AMD Radeon VII
-
--  AMD RX Vega 64 and RX Vega 56
 
 -  AMD Ryzen Processors with Radeon Graphics
 
@@ -313,6 +299,9 @@ The following are the configurable options for raytracing
    * Defines the output path for saving captured raytracing scenes
    * Use the macro **$(APP_NAME)** to insert the connected application's name into path
 
+- **Ray dispatch buffer size**:
+   * Defines the buffer size in system memory used for allocating ray dispatch data during scene capture
+
 .. image:: media/Workflow_Raytracing_Config.png
 
 **Crash Analysis Configuration**
@@ -513,6 +502,11 @@ The raytracing UI has the following elements:
 - **Capture scene** - Captures a scene and writes to disk
 
 - **Delay capture** - If this is enabled, pressing the capture scene button or triggering the hotkey will first wait the entered number of milliseconds before capturing.
+
+- **Collect ray dispatch data** - Enables capturing ray dispatches
+
+    .. NOTE::
+        This feature is currently experimental on **Linux** and requires at least 16GB of system memory to work reliably in most cases.
 
 - **Recently collected scenes** - Displays any recently collected scenes found in the output directory
 
