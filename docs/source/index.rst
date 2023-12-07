@@ -258,6 +258,9 @@ The following are the configurable options for profiling
    * If a profile has missing data, the SQTT buffer size can be increased to potentially remedy the issue
    * If an application experiences graphical corruption, decreasing the SQTT buffer size can potentially remedy the issue
 
+- **Enable shader instrumentation**:
+   * Enabling this setting generates data that allows RGP to track thread divergence for different shaders contained in a ray tracing pipeline. This is currently enabled for DirectX 12 only. Enabling this option causes minor changes into the generated shader code and may add extra overhead to the runtime of a shader.
+
 - **Vulkan/DirectX12**:
    * Displays information about the active trigger mode for profile capture
 
