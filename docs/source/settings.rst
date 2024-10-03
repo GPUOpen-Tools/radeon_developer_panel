@@ -18,3 +18,14 @@ A **Restore Defaults** button allows for resetting the path and auto open settin
 will reset them to the panel's executable path directory.
 
 .. image:: media/3.0/25_settings.png
+
+Theme Options
+************
+
+The UI can be configured to apply a theme based on three options:
+
+* Light
+* Dark
+* Detect OS (match the current system theme)
+
+.. image:: media/3.0/31_theme_options.png

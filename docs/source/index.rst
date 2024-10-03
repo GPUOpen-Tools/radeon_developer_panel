@@ -37,13 +37,13 @@ hardware. The suite is comprised of the following software:
    Radeon Developer Panel connects to the Radeon Developer Service in
    order to collect a profile, trace or scene.
 
-   **RGP documentation:** https://radeon-gpuprofiler.readthedocs.io/en/latest/
+   **RGP documentation:** https://gpuopen.com/manuals/rgp_manual/rgp_manual-index/
 
-   **RMV documentation:** https://radeon-memory-visualizer.readthedocs.io/en/latest/
+   **RMV documentation:** https://gpuopen.com/manuals/rmv_manual/rmv_manual-index/
 
-   **RRA documentation:** https://radeon-raytracing-analyzer.readthedocs.io/en/latest/
+   **RRA documentation:** https://gpuopen.com/manuals/rra_manual/rra_manual-index/
 
-   **RGD documentation:** https://radeon-gpu-detective.readthedocs.io/en/latest
+   **RGD documentation:** https://gpuopen.com/manuals/rgd_manual/rgd_manual-index/
 
 .. NOTE::
    By default, the driver allocates a maximum of 75 MB video
@@ -90,6 +90,8 @@ Graphics APIs, RDNA hardware, and operating systems
 -  Windows® 11
 
 -  Ubuntu 22.04 LTS (Vulkan only)
+
+-  Ubuntu 24.04 LTS (Vulkan only)
 
 Compute APIs, RDNA hardware, and operating systems
 --------------------------------------------------------------------
