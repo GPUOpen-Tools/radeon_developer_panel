@@ -12,18 +12,37 @@ The **Capture** section has the following items for profiling:
 
 - **Capture target** - Selects the driver connection that should be profiled when a capture is triggered.
 
+- **Capture mode** - Displays options for which profiling capture mode should be used
+
+   * **Frame** - Capture draws and dispatches that occur within a frame.
+
+   * **Dispatch** - Capture a number of dispatches. This option uses the *Dispatch Count* value from **Dispatch range** auto capture options.
+
 - **Capture profile** - Captures a profile and writes to disk.
 
 - **Enable instruction tracing** - Enables capturing detailed instruction data.
 
-- **Collect counters** - Enables capturing GPU cache counter data. Systems with an AMD Radeon RX 6000 or AMD Radeon RX 7000 series GPU will also collect raytracing counter data.
+- **Collect counters** - Enables capturing GPU cache counter data. Systems with an AMD Radeon RX 6000, AMD Radeon RX 7000, or AMD Radeon RX 9000 series GPU will also collect raytracing counter data.
 
 - **Delay capture** - If this is enabled, pressing the capture profile button or triggering the hotkey will first wait the entered number of milliseconds before capturing a profile.
 
 
 .. NOTE:: Enabling capture of detailed instruction data may adversely affect performance.
 
-The **Capture Settings** section has the following options for profiling:
+The **Auto capture** section has the following options for profiling:
+
+- **Auto capture mode**:
+   * Displays configuration options for auto capturing of profiles.
+
+   * **None** uses the selected capture mode when clicking the **Capture profile** button.
+
+   * **Frame** allows for specifying a specific frame index to trigger capture on.
+
+   * **Dispatch range** allows for setting the start and stop dispatch indices to use during automatic profile capture.
+
+   * **Dispatch timer** allows for specifying the number of dispatches to capture after a specified elapsed time.
+
+The **Advanced settings** section has the following options for profiling:
 
 - **SQTT Buffer Size**:
    * Defines the size of the buffer where SQTT data will be stored.
@@ -32,16 +51,6 @@ The **Capture Settings** section has the following options for profiling:
 
 - **Enable shader instrumentation**
    * Enables support for capturing more detailed shader instrumentation data.
-
-- **Auto capture**:
-   * Displays configuration options for the trigger mode and dispatch range for profile capture.
-
-   * **None** uses the default capture mode where clicking the **Capture profile** button will immediately
-     capture the requested number of dispatches.
-
-   * **Dispatch range** allows for setting the start and stop dispatch indices to use during automatic profile capture.
-
-   * **Timer** allows for specifying the number of dispatches to capture after a specified elapsed time.
 
 .. NOTE::
    To reduce the chance of truncated profile data, OpenCL profiling is limited to 10000 dispatches
@@ -173,7 +182,7 @@ This feature enables capturing a GPU crash summary using **Radeon GPU Detective*
 
     **OS**: Windows® 10 or Windows® 11
 
-    **GPU supported**: AMD Radeon RX 6000 or AMD Radeon RX 7000 series GPU
+    **GPU supported**: AMD Radeon RX 6000, AMD Radeon RX 7000, or AMD Radeon RX 9000 series GPU
 
     **Minimum supported driver**: AMD Radeon Adrenalin Software Driver version 23.7.2
 
@@ -196,6 +205,14 @@ a few settings that can be configured in the capture settings pane shown here:
 - **Expand all execution marker nodes**
 
    If checked, all execution marker nodes in the marker tree will be expanded.
+
+The **Analysis options** section lists configuration options:
+
+- **Enable hardware crash analysis**
+
+   When enabled, RGD collects low-level information about the GPU hardware state 
+   upon crash and augments the information that is presented in the Crash Analysis (.rgd) output
+   file with meaningful insights.
 
 Once active, a GPU crash dump will be created once a TDR occurs.
 
@@ -443,26 +460,33 @@ DXR shaders on AMD GPUs can be compiled in one of two modes. It can be observed 
     time it takes to compile the pipeline state object but may improve the performance when executing this shader.
 
 The decision is made by the shader compiler based on some heuristics with the goal of reaching maximum performance.
-It should not change the logic. This experiment forces the compiler to always choose the Indirect mode. If activating this
+It should not change the logic. This experiment forces the compiler to always choose the Indirect mode.
+
+If activating this
 experiment shortens the time it takes for a game to launch and load while it creates Pipeline State Objects (PSOs), it
 indicates that the creation of ray tracing PSOs takes significant amount of this time. For the fastest loading times,
-PSO creation should be done in multiple background threads, and a pipeline library should be used to cache them.
+PSO creation should be done in multiple background threads.
+
 If activating this experiment fixes a bug: a CPU crash or hang on PSO creation, GPU crash on shader execution,
 or incorrect results returned, it indicates a bug in the shader compiler.
 
 **Disable shader cache**
 
-Shader compilation happens in two stages. First, high level shader language (HLSL or GLSL) is compiled to an
-intermediate representation independent of the GPU and defined by the graphics API
-(DXIL in DirectX 12, SPIR-V in Vulkan). This should happen offline when the application is prepared to release to end
-users. The second stage happens in the graphics driver when a pipeline state object is created. The intermediate
-representation is then compiled to the assembly (ISA) appropriate for the specific GPU. This typically happens at
-runtime (e.g. when a game is launched or loads a level) and can take significant time. To optimize this process,
-compiled shaders are cached at multiple levels. Developers are encouraged to use a pipeline library available in the
-D3D12 API, but the driver also caches compiled shaders at the low level.
+Shader compilation happens in two stages.
+
+1. First, high level shader language (HLSL or GLSL) is compiled to an
+   intermediate representation independent of the GPU and defined by the graphics API
+   (DXIL in DirectX 12, SPIR-V in Vulkan). This should happen offline when the application is prepared to release to end
+   users.
+2. The second stage happens in the graphics driver when a pipeline state object (PSO) is created. The intermediate
+   representation is then compiled to the assembly (ISA) appropriate for the specific GPU. This typically happens at
+   runtime (e.g. when a game is launched or loads a level) and can take significant time. To optimize this process,
+   compiled shaders are cached by the driver.
 
 This experiment disables the shader cache implemented by the driver. It should not change the logic, but it can impact
-the duration of PSO creation. If activating this experiment makes the application launch and load much longer, it can
+the duration of PSO creation.
+
+If activating this experiment makes the application launch and load much longer, it can
 indicate the creation of the application PSOs take significant time that is optimized thanks to the cache, but new users
 would experience it the first time they launch the application. Activating this experiment will make PSO
 behave like it would on a system that has never run the application before. This can provide a more reliable measurement
@@ -474,6 +498,28 @@ Safety features
 Experiments in this group generally offer extra safety features that can decrease performance, but can make the
 application more correct and stable. Activating safety features can help expose errors in the code that
 could potentially cause instability in an application.
+
+**Disable color texture compression**
+
+GPUs utilize internal compression formats for textures. This should not be confused with general data compression file
+formats (like ZIP) or algorithms (like Deflate), or with explicit block-compressed texture pixel formats
+(like BC6, ASTC). Internal compression formats are lossless, opaque to developers and are used to improve performance.
+Internal compression formats typically increase, rather than decrease, texture sizes in memory because additional
+space is needed for metadata, Such compression is typically used on render-target and depth-stencil textures.
+A decision whether a texture should be compressed is made by the driver based on some heuristics with the goal of
+achieving maximum performance. It can be observed in RGP, on the Render/depth targets tab, DCC column.
+
+Compressed textures may be more sensitive to incorrect data. Textures must be correctly initialized with either the
+``Clear``, ``Copy`` or ``DiscardResource`` operation so that the compression metadata is valid. Not using these
+operations causes undefined results, as textures can be created in a place where memory may contain garbage data,
+e.g. created as placed in a larger memory heap where another resource existed before, or aliasing memory with some
+other resource used in a disjoint period throughout each render frame. Overwriting the whole texture using a shader
+as a render target or UAV doesn’t count as proper initialization. In such case, visual artifacts can remain,
+or it can even lead to a GPU crash.
+
+This experiment disables compression of textures other than depth-stencil, typically render targets. If activating this
+experiment fixes a bug like a visual artifact visible on the screen, it can indicate incorrect initialization of the
+texture – missing ``Clear``, ``Copy``, or a missing or incorrect barrier.
 
 **Disable depth-stencil texture compression**
 

@@ -75,6 +75,8 @@ Graphics APIs, RDNA hardware, and operating systems
 
 \ **Supported RDNA hardware**
 
+-  AMD Radeon RX 9000 series
+
 -  AMD Radeon RX 7000 series
 
 -  AMD Radeon RX 6000 series
@@ -103,6 +105,8 @@ Compute APIs, RDNA hardware, and operating systems
 -  HIP
 
 \ **Supported RDNA hardware**
+
+-  AMD Radeon RX 9000 series
 
 -  AMD Radeon RX 7000 series
 
