@@ -214,6 +214,12 @@ The **Analysis options** section lists configuration options:
    upon crash and augments the information that is presented in the Crash Analysis (.rgd) output
    file with meaningful insights.
 
+The **Shader debug information search paths** section allows for configuring DXC shader PDB file search paths
+which will be used during crash dump generation.
+
+When provided and PDBs are successfully correlated the associated shader entry points and source files will be available to
+rgd.exe. Please see **Radeon GPU Detective** `documentation <https://gpuopen.com/manuals/rgd_manual/rgd_manual-help_manual/>`_ for more information.
+
 Once active, a GPU crash dump will be created once a TDR occurs.
 
 Example output:
@@ -498,6 +504,23 @@ Safety features
 Experiments in this group generally offer extra safety features that can decrease performance, but can make the
 application more correct and stable. Activating safety features can help expose errors in the code that
 could potentially cause instability in an application.
+
+**Submit command buffers separately**
+
+Submits each command buffer for execution on the GPU separately - disables chaining of multiple command buffers in
+a single submit call, so they don’t execute concurrently even when they are part of a single submission
+
+**Force NonUniformResourceIndex**
+
+Forces the shader compiler to treat all dynamic descriptor indexing as if it was decorated with NonUniformResourceIndex.
+This can be useful to aid in identifying bugs in shaders where NonUniformResourceIndex usage is missing while the index
+is non-uniform.
+
+**Upload heap in video memory**
+
+Enable automatic use of CPU-visible video memory preferred over system memory by resources created in the UPLOAD heap.
+This can be useful in identifying an opportunity to improve the performance of GPU data uploading by creating some buffers
+in the GPU_UPLOAD heap instead.
 
 **Disable color texture compression**
 
