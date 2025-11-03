@@ -214,6 +214,13 @@ The **Analysis options** section lists configuration options:
    upon crash and augments the information that is presented in the Crash Analysis (.rgd) output
    file with meaningful insights.
 
+- **Collect wave SGPRs and VGPRs**
+   When enabled, RGD collects wave SGPRs and VGPRs to get more information about the resource descriptors
+   used by an in-flight instruction at the time of the crash.
+   
+   .. NOTE::
+      This option will significantly increase the size of the generated crash dump file.
+
 The **Shader debug information search paths** section allows for configuring DXC shader PDB file search paths
 which will be used during crash dump generation.
 
