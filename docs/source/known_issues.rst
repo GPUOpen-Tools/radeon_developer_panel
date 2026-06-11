@@ -39,20 +39,21 @@ Windows Firewall Blocking Incoming Connections
       Alert popup, enable the checkboxes that apply for your network
       configuration, and click “Allow access”.
 
-.. image:: media/Firewall_1.png
+      .. image:: media/Firewall_1.png
 
-a. If “Cancel” was previously clicked in the above step during the first
-   run, the exception for RDS can still be enabled by allowing it within
-   the Windows Control Panel firewall settings. Navigate to the “Allow
-   an app or feature” section, and ensure that the checkbox next to the
-   RadeonDeveloperService(.exe) entry is checked:
+   b. If “Cancel” was previously clicked in the above step during the
+      first run, the exception for RDS can still be enabled by allowing
+      it within the Windows Control Panel firewall settings. Navigate
+      to the “Allow an app or feature” section, and ensure that the
+      checkbox next to the RadeonDeveloperService(.exe) entry is
+      checked:
 
-.. image:: media/Firewall_2.png
+      .. image:: media/Firewall_2.png
 
-.. image:: media/Firewall_3.png
+      .. image:: media/Firewall_3.png
 
-a. Alternatively, disable the Windows Firewall entirely will also allow
-   RDS to be connected to.
+   c. Alternatively, disabling the Windows Firewall entirely will also
+      allow the panel to connect to RDS.
 
 .. NOTE::
    The Windows firewall alert in no way indicates that the Radeon
@@ -115,14 +116,10 @@ connections list and click the Connect button again.
 Missing Timing Data for DirectX 12 Applications
 -----------------------------------------------
 
-To collect complete profile datasets for DirectX 12 applications, two
-additional actions must be performed:
-
-1) The user account in Windows needs to be associated with the
-“Performance Log Users” group.
-
-2) The following REG_DWORD registry key must be set:
-**HKEY_LOCAL_MACHINE\\Software\\AMD\\RadeonTools\\RgpEnableEtw=1**
+To collect complete profile datasets for DirectX 12 applications,
+the user account in Windows needs to be associated with the
+“Performance Log Users” group and a driver specific registry key must be
+set.
 
 If these two privileges aren't configured properly, profiles
 collected under the user's account may not include all timing data for

@@ -38,4 +38,4 @@ Enabling the "Disable client timeout" toggle will stop Radeon Developer Panel di
 
 .. NOTE::
    For Local connections, starting **Radeon Developer Service** is optional.
-   For Remote Connections, a **Radeon Developer Service** instance must be started on the remote machine (see below)
+   For Remote Connections, a **Radeon Developer Service** instance must be started on the remote machine; see :doc:`remote_connections`.

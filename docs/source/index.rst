@@ -21,6 +21,10 @@ hardware. The suite is comprised of the following software:
    developer to configure driver settings and generate profiles from
    DirectX12, Vulkan, OpenCL and HIP applications.
 
+-  **Radeon Developer Panel CLI** - A headless, command-line version of
+   the Radeon Developer Panel for automated pipelines and scripted
+   capture workflows.
+
 -  **Radeon GPU Profiler (RGP)** - A GUI tool used to visualize and
    analyze the profile data.
 
@@ -59,9 +63,11 @@ hardware. The suite is comprised of the following software:
    remote_connections.rst
    capture.rst
    features.rst
+   system.rst
    settings.rst
    bug_report.rst
    radeon_developer_service
+   radeon_developer_panel_cli.rst
    known_issues.rst
 
 Graphics APIs, RDNA hardware, and operating systems
@@ -86,8 +92,6 @@ Graphics APIs, RDNA hardware, and operating systems
 -  AMD Ryzen™ Processors with Radeon Graphics
 
 \ **Supported Operating Systems**
-
--  Windows® 10
 
 -  Windows® 11
 
@@ -131,7 +135,5 @@ Compute APIs, RDNA hardware, and operating systems
 -  AMD Ryzen Processors with Radeon Graphics
 
 \ **Supported Operating Systems**
-
--  Windows® 10
 
 -  Windows® 11

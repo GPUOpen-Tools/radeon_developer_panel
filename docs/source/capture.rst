@@ -83,7 +83,7 @@ Blocked applications
 
 Sometimes it is useful to completely exclude certain background applications
 from being recognized and displayed in the Radeon Developer Panel. For example,
-Windows 10 has applications that use DirectX 12 and when they are started can
+Windows has applications that use DirectX 12 and when they are started can
 show up in the list of target applications. The **Profiling** feature also requires
 that only one application is started while using the feature so blocking applications, such as launchers
 that run before another application starts, can be useful.
@@ -121,17 +121,19 @@ The system information pane lists detailed hardware and system information for t
 Pressing the Export button will open a dialog to choose a folder. Upon selecting a folder, the system information will be exported to that folder
 as a JSON file.
 
-.. image:: media/3.0/27_system_info.png
+.. image:: media/3.0/7_system_info.png
 
 .. _OutputLog:
 
 Output log
 ----------
 
-Logging information about the connection and any errors encountered by Radeon Developer Panel or the Radeon Developer Service is
-displayed here. The output log can be filtered by the source that produced the message or the process id that that message was relevant for.
+Logging information about the connection and any errors encountered by Radeon Developer Panel or the Radeon Developer
+Service is displayed here. The output log can be filtered by the source that produced the message, the process id that
+the message was relevant for, or the UMD connection id of the driver instance that produced the message. The UMD filter
+is populated based on the selected process id and is only available once a specific process id is chosen.
 
-.. image:: media/3.0/28_output_log.png
+.. image:: media/3.0/8_output_log.png
 
 Selecting the **Open log file location** button will open the directory containing the log file.
 
