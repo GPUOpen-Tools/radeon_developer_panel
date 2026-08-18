@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file alias="RDS_Icon.ico">../../assets/rds_icon_levanim.ico</file>
+        <file>../../assets/third_party/ionicons/loop.svg</file>
+    </qresource>
+</RCC>

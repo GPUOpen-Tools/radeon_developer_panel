@@ -1,0 +1,37 @@
+{
+  "controllers": [
+    {
+      "config": {
+        "enabled": true
+      },
+      "name": "frame"
+    }
+  ],
+  "sources": [
+    {
+      "config": {
+        "enabled": true
+      },
+      "name": "asicinfo"
+    },
+    {
+      "config": {
+        "enabled": true
+      },
+      "name": "apiinfo"
+    },
+    {
+      "config": {
+        "enabled": true
+      },
+      "name": "AccelStruct"
+    },
+    {
+      "config": {
+        "enabled": true,
+        "rayHistoryBufferSizeBytes": 0
+      },
+      "name": "RayHistory"
+    }
+  ]
+}

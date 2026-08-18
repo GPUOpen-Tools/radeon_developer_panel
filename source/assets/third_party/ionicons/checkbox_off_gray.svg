@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="checkbox_off_gray.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>ionicons-v5-k</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1210"
+     inkscape:window-height="793"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="1.84375"
+     inkscape:cx="95.831887"
+     inkscape:cy="221.4854"
+     inkscape:window-x="733"
+     inkscape:window-y="146"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">ionicons-v5-k</title>
+  <path
+     d="m 144,400 h 224 a 144,144 0 0 0 0,-288 H 144 a 144,144 0 0 0 0,288 z m 0,-230 a 86,86 0 1 1 -86,86 85.88,85.88 0 0 1 86,-86 z"
+     id="path4"
+     style="fill:#b3b3b3"
+     inkscape:connector-curvature="0" />
+  <path
+     style="fill:#ffffff;fill-opacity:1;stroke:#333364;stroke-width:520.67797852;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
+     d="m 135.20246,341.37333 c -33.63605,-3.84631 -61.915228,-26.44111 -72.438709,-57.87784 -3.443924,-10.28801 -4.046198,-14.38585 -4.046198,-27.53004 0,-13.1332 0.604285,-17.25243 4.031606,-27.4823 16.403469,-48.96109 73.164441,-72.38395 119.342901,-49.2478 8.92823,4.47318 14.83115,8.79723 22.51072,16.48969 12.82255,12.84408 20.09275,26.46601 23.66162,44.33397 0.98782,4.94563 1.23019,7.99467 1.24282,15.63525 0.0165,10.01548 -0.48623,14.1284 -2.78478,22.77966 -8.49189,31.96188 -35.36656,56.3564 -68.3898,62.07842 -6.03405,1.04554 -17.58207,1.45542 -23.13018,0.82099 z"
+     id="path2289"
+     inkscape:connector-curvature="0" />
+</svg>

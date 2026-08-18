@@ -1,0 +1,47 @@
+RDP bug report
+==========================================
+Description
+(fill me in)
+
+==========================================
+Steps to Reproduce
+1. (fill me in)
+2.
+...
+
+==========================================
+Enabled Features
+
+<enabled_modules>
+
+==========================================
+Host System Information
+
+RDP Version: <rdp_version>
+RDP build Date: <build_date>
+
+Operating System: <host_os_name>
+Qt Version: <qt_version>
+
+Tool Version: <dd_tool_version>
+Router Version <dd_router_version>
+
+==========================================
+Connected System Information
+
+Driver Version: <driver_packaging_version>
+GPUOpen Interface Major Version: <gpu_open_interface_major_version>
+
+Operating System Name: <operating_system_name>
+Operating System Description: <operating_system_description>
+
+GPUs:
+<start_gpu>******************************************
+Name: <name>
+
+ASIC info
+************
+Device Id: <device_id>
+Revision: <revision>
+Family: <family>
+gfx_engine: <gfx_engine><end_gpu>

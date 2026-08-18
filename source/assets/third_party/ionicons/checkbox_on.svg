@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="checkbox_on.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>ionicons-v5-k</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1420"
+     inkscape:window-height="790"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="0.4609375"
+     inkscape:cx="450.18248"
+     inkscape:cy="210.84386"
+     inkscape:window-x="766"
+     inkscape:window-y="310"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <title
+     id="title2">ionicons-v5-k</title>
+  <path
+     style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.10847457;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
+     d="m 344.7322,337.69264 c -25.10137,-8.31922 -42.05613,-23.02721 -53.61806,-46.51281 -6.5444,-13.29358 -7.1277,-16.16879 -7.1277,-35.13421 0,-18.70373 0.65084,-22.02961 6.88683,-35.19293 8.76179,-18.49493 22.99636,-32.7295 41.49129,-41.49129 13.35266,-6.32569 16.30482,-6.8826 36.23205,-6.83503 18.711,0.0447 23.33607,0.82035 33.62712,5.63972 17.65322,8.26711 33.31574,23.48247 41.69638,40.50597 6.67891,13.5668 7.11718,15.86539 7.11718,37.32794 0,21.46255 -0.43827,23.76114 -7.11718,37.32794 -8.3672,16.9962 -23.12923,31.29291 -41.27938,39.97819 -14.72555,7.04653 -43.34206,9.2142 -57.90853,4.38651 z"
+     id="path818"
+     inkscape:connector-curvature="0" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     sodipodi:insensitive="true">
+    <ellipse
+       style="fill:#ffffff;fill-opacity:1;stroke:#333364;stroke-width:960;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
+       id="path1148"
+       cx="369.35593"
+       cy="256"
+       rx="99.796608"
+       ry="99.254234" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <path
+       d="M 368,112 H 144 a 144,144 0 0 0 0,288 h 224 a 144,144 0 0 0 0,-288 z m 0,230 a 86,86 0 1 1 86,-86 85.88,85.88 0 0 1 -86,86 z"
+       id="path4"
+       style="fill:#0078d7;fill-opacity:1"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
