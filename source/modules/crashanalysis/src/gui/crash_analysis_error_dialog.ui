@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>CrashAnalysisErrorDialog</class>
+    <widget class="QDialog" name="CrashAnalysisErrorDialog">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>921</width>
+                <height>273</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string/>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+                <widget class="QLabel" name="label_2">
+                    <property name="text">
+                        <string>There was an error generating crash summaries:</string>
+                    </property>
+                </widget>
+            </item>
+            <item>
+                <widget class="QTextEdit" name="error_contents">
+                    <property name="font">
+                        <font>
+                            <pointsize>8</pointsize>
+                        </font>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="readOnly">
+                        <bool>true</bool>
+                    </property>
+                    <property name="markdown">
+                        <string>hello world
+
+                        </string>
+                    </property>
+                    <property name="html">
+                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                            &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style
+                            type=&quot;text/css&quot;&gt;
+                            p, li { white-space: pre-wrap; }
+                            &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2';
+                            font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+                            &lt;p style=&quot; margin-top:3px; margin-bottom:3px; margin-left:0px; margin-right:0px;
+                            -qt-block-indent:0; text-indent:0px;&quot;&gt;hello world&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                        </string>
+                    </property>
+                    <property name="acceptRichText">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                    <item>
+                        <spacer name="horizontalSpacer">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>40</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="ok_button">
+                            <property name="text">
+                                <string>Ok</string>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+        </layout>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>

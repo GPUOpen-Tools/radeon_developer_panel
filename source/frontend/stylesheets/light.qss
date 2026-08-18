@@ -1,0 +1,5 @@
+rdp--SidebarWidget#sidebar, ScrollablePaneContents { background: palette(light); border-right: 1px solid palette(mid); }
+
+rdp--SystemInfoWidget QScrollArea { background-color: palette(dark); }
+
+CollapsiblePaneBase { background-color: palette(midlight); border: 1px solid palette(dark); }

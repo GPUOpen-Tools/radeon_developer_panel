@@ -1,0 +1,113 @@
+{
+  "version": 4,
+  "stats": {
+    "timestamp": {
+      "ticks": 3346519563805,
+      "ticksPerSecond": 10000000
+    }
+  },
+  "system": {
+    "config": {
+      "power_dpm_writable": true
+    },
+    "cpu": [
+      {
+        "name": "AMD Ryzen 7 2700X Eight-Core Processor",
+        "architecture": "x64",
+        "cpuId": "AMD64 Family 23 Model 8 Stepping 2",
+        "deviceId": "CPU0",
+        "numLogicalCores": 16,
+        "numPhysicalCores": 8,
+        "speed": 3700,
+        "vendorId": "AuthenticAMD"
+      }
+    ],
+    "devdriver": {
+      "GPUOPEN_CLIENT_INTERFACE_MAJOR_VERSION": 42,
+      "tag": "dev"
+    },
+    "driver": {
+      "name": "AMD Windows",
+      "description": "AMD Windows Driver",
+      "packagingVersion": "22.40-220717n-230356E-ATI",
+      "softwareVersion": "22.40",
+      "isClosedSource": true
+    },
+    "etwSupport": {
+      "hasPermission": true,
+      "isSupported": true,
+      "statusCode": 0,
+      "statusDescription": "The operation completed successfully.\r\n"
+    },
+    "gpus": [
+      {
+        "asic": {
+          "engineClockHz": {
+            "max": 2044000000,
+            "min": 500000000
+          },
+          "gpuCounterFreq": 100000000,
+          "gpuIndex": 0,
+          "ids": {
+            "device": 29695,
+            "eRev": 60,
+            "family": 143,
+            "gfxEngine": 13,
+            "revision": 199
+          }
+        },
+        "bigSw": {
+          "major": 2021,
+          "minor": 1,
+          "misc": 0
+        },
+        "drm": {
+          "major": 0,
+          "minor": 0
+        },
+        "memory": {
+          "bandwidth": 224000000000,
+          "busBitWidth": 128,
+          "excludedVaRanges": [
+            {
+              "base": 0,
+              "size": 4096
+            }
+          ],
+          "heaps": {
+            "invisible": {
+              "physAddr": 268435456,
+              "size": 8304721920
+            },
+            "local": {
+              "physAddr": 0,
+              "size": 268435456
+            }
+          },
+          "memClockHz": {
+            "max": 875000000,
+            "min": 96000000
+          },
+          "memOpsPerClock": 16,
+          "type": "Gddr6"
+        },
+        "name": "AMD Radeon RX 6600",
+        "pci": {
+          "bus": 11,
+          "device": 0,
+          "function": 0
+        }
+      }
+    ],
+    "os": {
+      "desc": "19041.1.amd64fre.vb_release.191206-1406",
+      "hostname": "MSDN-DEV-01.amd.com",
+      "memory": {
+        "physical": 34277056512,
+        "swap": 68636794880
+      },
+      "name": "Windows 10 Pro",
+      "type": "Windows"
+    }
+  }
+}

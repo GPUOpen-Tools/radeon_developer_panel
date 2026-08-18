@@ -1,0 +1,51 @@
+{
+  "name": "d3d12",
+  "version-string": "1.0.0",
+  "builtin-baseline": "eae1680538b86f962455c27abca2aad0dc304a4d",
+  "dependencies": [
+    {
+      "name": "directx-dxc",
+      "version>=": "2024-07-31#2",
+      "platform": "windows"
+    },
+    {
+      "name": "directx-headers",
+      "version>=": "1.614.1",
+      "platform": "windows"
+    },
+    {
+      "name": "directx12-agility",
+      "version>=": "1.614.1",
+      "platform": "windows"
+    },
+    {
+      "name": "directxmath",
+      "version>=": "2024-10-15"
+    },
+    {
+      "name": "directxtk12",
+      "version>=": "2024-10-28",
+      "platform": "windows"
+    },
+    {
+      "name": "dstorage",
+      "version>=": "1.2.3#1",
+      "platform": "windows"
+    },
+    {
+      "name": "sdl3",
+      "version>=": "3.1.6-preview#1"
+    },
+    {
+      "name": "fmt",
+      "version>=": "11.0.2#1"
+    },
+    {
+      "name": "imgui",
+      "features": [
+        "dx12-binding",
+        "sdl3-binding"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "output_path": "C:\\Users\\developer\\Documents\\rgp_profiles\\$(APP_NAME)",
+  "opencl_auto_trigger": 2,
+  "dispatch_count": 25,
+  "frame_trigger": true,
+  "compute_auto_capture_time_ms": 123,
+  "spm_counter_path": "C:\\Users\\developer\\Documents\\counters.spm"
+}

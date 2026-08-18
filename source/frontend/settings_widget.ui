@@ -1,0 +1,1456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+	<class>SettingsWidget</class>
+	<widget class="QWidget" name="SettingsWidget">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>740</width>
+				<height>658</height>
+			</rect>
+		</property>
+		<property name="sizePolicy">
+			<sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+				<horstretch>0</horstretch>
+				<verstretch>0</verstretch>
+			</sizepolicy>
+		</property>
+		<property name="windowTitle">
+			<string>Form</string>
+		</property>
+		<layout class="QVBoxLayout" name="verticalLayout">
+			<item>
+				<widget class="QWidget" name="rgp_path_widget" native="true">
+					<layout class="QVBoxLayout" name="rgp_path_layout">
+						<property name="spacing">
+							<number>2</number>
+						</property>
+						<property name="leftMargin">
+							<number>1</number>
+						</property>
+						<property name="topMargin">
+							<number>1</number>
+						</property>
+						<property name="rightMargin">
+							<number>1</number>
+						</property>
+						<property name="bottomMargin">
+							<number>1</number>
+						</property>
+						<item>
+							<widget class="QLabel" name="label">
+								<property name="font">
+									<font>
+										<pointsize>24</pointsize>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Settings</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<spacer name="verticalSpacer_5">
+								<property name="orientation">
+									<enum>Qt::Orientation::Vertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Policy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>0</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathToRGPHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path and filename to Radeon GPU Profiler:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToRGPTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="rgp_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_6">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_rgp_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="profilerPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for profiler path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<widget class="QWidget" name="rmv_path_widget" native="true">
+					<layout class="QVBoxLayout" name="verticalLayout_2">
+						<property name="spacing">
+							<number>2</number>
+						</property>
+						<property name="leftMargin">
+							<number>1</number>
+						</property>
+						<property name="topMargin">
+							<number>1</number>
+						</property>
+						<property name="rightMargin">
+							<number>1</number>
+						</property>
+						<property name="bottomMargin">
+							<number>1</number>
+						</property>
+						<item>
+							<spacer name="verticalSpacer_3">
+								<property name="orientation">
+									<enum>Qt::Orientation::Vertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Policy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathToRMVHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path and filename to Radeon Memory Visualizer:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToRMVTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="rmv_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_7">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_rmv_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="rmvPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for RMV path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<widget class="QWidget" name="rra_path_widget" native="true">
+					<layout class="QVBoxLayout" name="verticalLayout_3">
+						<property name="spacing">
+							<number>2</number>
+						</property>
+						<property name="leftMargin">
+							<number>1</number>
+						</property>
+						<property name="topMargin">
+							<number>1</number>
+						</property>
+						<property name="rightMargin">
+							<number>1</number>
+						</property>
+						<property name="bottomMargin">
+							<number>1</number>
+						</property>
+						<item>
+							<spacer name="verticalSpacer_4">
+								<property name="orientation">
+									<enum>Qt::Orientation::Vertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Policy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathToRRAHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path and filename to Radeon Raytracing Analyzer:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToRRATextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="rra_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_8">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_rra_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="rraPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for RRA path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<widget class="QWidget" name="rgd_path_widget" native="true">
+					<layout class="QVBoxLayout" name="verticalLayout_5">
+						<property name="spacing">
+							<number>2</number>
+						</property>
+						<property name="leftMargin">
+							<number>1</number>
+						</property>
+						<property name="topMargin">
+							<number>1</number>
+						</property>
+						<property name="rightMargin">
+							<number>1</number>
+						</property>
+						<property name="bottomMargin">
+							<number>1</number>
+						</property>
+						<item>
+							<spacer name="verticalSpacer_6">
+								<property name="orientation">
+									<enum>Qt::Orientation::Vertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Policy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathToRGDHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path and filename to Radeon GPU Detective:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToRGDTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="rgd_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_9">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_rgd_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="rgdPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for RGD path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<spacer name="verticalSpacer_8">
+					<property name="orientation">
+						<enum>Qt::Orientation::Vertical</enum>
+					</property>
+					<property name="sizeType">
+						<enum>QSizePolicy::Policy::Fixed</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>18</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<widget class="QWidget" name="settings_file_path_widget" native="true">
+					<layout class="QVBoxLayout" name="verticalLayout_6">
+						<property name="spacing">
+							<number>2</number>
+						</property>
+						<property name="leftMargin">
+							<number>1</number>
+						</property>
+						<property name="topMargin">
+							<number>1</number>
+						</property>
+						<property name="rightMargin">
+							<number>1</number>
+						</property>
+						<property name="bottomMargin">
+							<number>1</number>
+						</property>
+						<item>
+							<spacer name="verticalSpacer_9">
+								<property name="orientation">
+									<enum>Qt::Orientation::Vertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Policy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathTosettingsFileHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path to settings config file:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToSettingsFileTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="settings_file_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_10">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_settings_file_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="settingsFilePathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for settings path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<spacer name="verticalSpacer_10">
+					<property name="orientation">
+						<enum>Qt::Orientation::Vertical</enum>
+					</property>
+					<property name="sizeType">
+						<enum>QSizePolicy::Policy::Fixed</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>18</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<widget class="QWidget" name="widget" native="true">
+					<layout class="QHBoxLayout" name="horizontalLayout">
+						<property name="spacing">
+							<number>0</number>
+						</property>
+						<property name="leftMargin">
+							<number>0</number>
+						</property>
+						<property name="topMargin">
+							<number>0</number>
+						</property>
+						<property name="rightMargin">
+							<number>0</number>
+						</property>
+						<property name="bottomMargin">
+							<number>0</number>
+						</property>
+						<item>
+							<widget class="QPushButton" name="browse_rdts">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="text">
+									<string>Locate Radeon Developer Tool Suite</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<spacer name="horizontalSpacer">
+								<property name="orientation">
+									<enum>Qt::Orientation::Horizontal</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>526</width>
+										<height>20</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<spacer name="vertical_spacer_before_backend_line">
+					<property name="orientation">
+						<enum>QtVertical</enum>
+					</property>
+					<property name="sizeType">
+						<enum>QSizePolicy::Fixed</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>12</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<widget class="Line" name="backend_tests_separator_line">
+					<property name="orientation">
+						<enum>QtHorizontal</enum>
+					</property>
+				</widget>
+			</item>
+			<item>
+				<spacer name="backend_tests_separator_spacer">
+					<property name="orientation">
+						<enum>QtVertical</enum>
+					</property>
+					<property name="sizeType">
+						<enum>QSizePolicy::Fixed</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>12</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<widget class="QGroupBox" name="backend_test_group_box">
+					<layout class="QVBoxLayout" name="backend_tests_layout">
+						<item>
+							<widget class="QLabel" name="pathToRgpBackendTestHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path to RGP Backend Test executable:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToRgpBackendTestTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="rgp_backend_test_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_rgp_backend_test">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_rgp_backend_test_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<spacer name="verticalSpacer_backend_tests_rgp">
+								<property name="orientation">
+									<enum>QtOrientationVertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="rgpBackendTestPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for RGP backend test path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathToRmvBackendTestHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed"/>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path to RMV Backend Test executable:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToRmvBackendTestTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="rmv_backend_test_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_rmv_backend_test">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_rmv_backend_test_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="rmvBackendTestPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed"/>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for RMV backend test path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<spacer name="verticalSpacer_backend_tests_rmv">
+								<property name="orientation">
+									<enum>QtOrientationVertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathToRraBackendTestHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed"/>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path to RRA Backend Test executable:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToRraBackendTestTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="rra_backend_test_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_rra_backend_test">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_rra_backend_test_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="rraBackendTestPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed"/>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for RRA backend test path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<spacer name="verticalSpacer_backend_tests_rra">
+								<property name="orientation">
+									<enum>QtOrientationVertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>8</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<spacer name="verticalSpacer_7">
+					<property name="orientation">
+						<enum>Qt::Orientation::Vertical</enum>
+					</property>
+					<property name="sizeType">
+						<enum>QSizePolicy::Policy::Fixed</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>8</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<widget class="QWidget" name="text_editor_path_widget" native="true">
+					<layout class="QVBoxLayout" name="verticalLayout_7">
+						<property name="spacing">
+							<number>2</number>
+						</property>
+						<property name="leftMargin">
+							<number>1</number>
+						</property>
+						<property name="topMargin">
+							<number>1</number>
+						</property>
+						<property name="rightMargin">
+							<number>1</number>
+						</property>
+						<property name="bottomMargin">
+							<number>1</number>
+						</property>
+						<item>
+							<widget class="Line" name="line">
+								<property name="orientation">
+									<enum>Qt::Orientation::Horizontal</enum>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<spacer name="verticalSpacer_11">
+								<property name="orientation">
+									<enum>Qt::Orientation::Vertical</enum>
+								</property>
+								<property name="sizeType">
+									<enum>QSizePolicy::Policy::Fixed</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>20</width>
+										<height>15</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+						<item>
+							<widget class="QLabel" name="pathToTextEditorHeader">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<pointsize>10</pointsize>
+										<bold>false</bold>
+									</font>
+								</property>
+								<property name="text">
+									<string>Path and filename to preferred text editor:</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<layout class="QHBoxLayout" name="pathToTextEditorTextboxHorizontalLayout">
+								<item>
+									<widget class="QLineEdit" name="text_editor_executable_path">
+										<property name="sizePolicy">
+											<sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+												<horstretch>0</horstretch>
+												<verstretch>0</verstretch>
+											</sizepolicy>
+										</property>
+										<property name="minimumSize">
+											<size>
+												<width>400</width>
+												<height>0</height>
+											</size>
+										</property>
+										<property name="maximumSize">
+											<size>
+												<width>16777215</width>
+												<height>16777215</height>
+											</size>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<spacer name="horizontalSpacer_11">
+										<property name="orientation">
+											<enum>Qt::Orientation::Horizontal</enum>
+										</property>
+										<property name="sizeType">
+											<enum>QSizePolicy::Policy::Fixed</enum>
+										</property>
+										<property name="sizeHint" stdset="0">
+											<size>
+												<width>5</width>
+												<height>20</height>
+											</size>
+										</property>
+									</spacer>
+								</item>
+								<item>
+									<widget class="QPushButton" name="browse_text_editor_btn">
+										<property name="maximumSize">
+											<size>
+												<width>30</width>
+												<height>16777215</height>
+											</size>
+										</property>
+										<property name="styleSheet">
+											<string notr="true">min-width: 30px;</string>
+										</property>
+										<property name="text">
+											<string>...</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+						<item>
+							<widget class="QLabel" name="textEditorPathStatusLabel">
+								<property name="sizePolicy">
+									<sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+										<horstretch>0</horstretch>
+										<verstretch>0</verstretch>
+									</sizepolicy>
+								</property>
+								<property name="font">
+									<font>
+										<bold>true</bold>
+									</font>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">color: red</string>
+								</property>
+								<property name="text">
+									<string>{placeholder for text editor path status}</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+			<item>
+				<spacer name="verticalSpacer_2">
+					<property name="orientation">
+						<enum>Qt::Orientation::Vertical</enum>
+					</property>
+					<property name="sizeType">
+						<enum>QSizePolicy::Policy::Fixed</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>8</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<widget class="QCheckBox" name="auto_open_toggle">
+					<property name="text">
+						<string>Auto-open traces</string>
+					</property>
+				</widget>
+			</item>
+			<item>
+				<spacer name="verticalSpacer_12">
+					<property name="orientation">
+						<enum>Qt::Orientation::Vertical</enum>
+					</property>
+					<property name="sizeType">
+						<enum>QSizePolicy::Policy::Fixed</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>8</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<layout class="QHBoxLayout" name="color_theme_layout" stretch="0,0,0">
+					<item>
+						<widget class="QLabel" name="color_theme_label_">
+							<property name="text">
+								<string>Color Theme</string>
+							</property>
+						</widget>
+					</item>
+					<item>
+						<widget class="QComboBox" name="color_theme_combo_">
+							<item>
+								<property name="text">
+									<string>Light</string>
+								</property>
+							</item>
+							<item>
+								<property name="text">
+									<string>Dark</string>
+								</property>
+							</item>
+							<item>
+								<property name="text">
+									<string>Detect OS</string>
+								</property>
+							</item>
+						</widget>
+					</item>
+					<item>
+						<spacer name="horizontalSpacer_2">
+							<property name="orientation">
+								<enum>Qt::Orientation::Horizontal</enum>
+							</property>
+							<property name="sizeHint" stdset="0">
+								<size>
+									<width>40</width>
+									<height>20</height>
+								</size>
+							</property>
+						</spacer>
+					</item>
+				</layout>
+			</item>
+			<item>
+				<spacer name="verticalSpacer">
+					<property name="orientation">
+						<enum>Qt::Orientation::Vertical</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>40</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+			<item>
+				<widget class="QDialogButtonBox" name="button_box_">
+					<property name="standardButtons">
+						<set>QDialogButtonBox::StandardButton::RestoreDefaults</set>
+					</property>
+				</widget>
+			</item>
+		</layout>
+	</widget>
+	<resources/>
+	<connections/>
+</ui>

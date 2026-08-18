@@ -1,0 +1,133 @@
+Radeon™ Developer Panel v3.5.0
+------------------------------
+
+1) New RDP Command Line Interface (CLI) for scripted and automated workflows.
+2) Driver Experiments and Device Clocks moved to new System tab.
+3) Display all drivers in the System Info widget with per-GPU driver version information.
+4) Render operation count UI added to the profiling view.
+5) Bug/stability fixes.
+
+Known Issues
+-----------------------------------------
+
+* All platforms
+
+1)  Radeon Developer Panel can only capture a profile on a single AMD GPU at a time.
+2)  Radeon Developer Panel cannot capture profiles from non-AMD GPUs.
+3)  In some rare cases on RDNA™ 2 hardware, all counter data may be missing from a captured RGP profile.
+    When this happens, Radeon Developer Panel will prompt the user to recapture.
+4)  In some rare cases, data for one or more cache counters may be missing. Usually, recapturing will allow the missing
+    data to show up.
+5)  Cache and ray tracing counter data collection is not currently supported on RDNA based APUs.
+6)  For systems consisting of an AMD APU and an AMD discrete GPU, capturing profiles should work, but an error
+    may be logged in the Radeon Developer Panel regarding not being able to set peak clock mode.
+    It is recommended that the GPU in the APU be disabled in the BIOS.
+7)  Crash Analysis is not supported on RX 6750 XT.
+8)  New Hardware Crash Analysis option is not supported on APUs.
+
+
+* Windows®
+
+1)  Current versions of the Radeon Developer Panel cannot profile Universal Windows Platform (UWP) applications.
+    Please use Radeon Developer Panel v2.8 to profile a UWP application.
+2)  On RDNA 2 cards (AMD Radeon RX 6000 series), in certain situations, the "Disable depth-stencil texture compression"
+    experiment has no impact.
+3)  Counter collection is not supported on ROG Xbox Ally.
+4)  Crash Analysis is not supported on ROG Xbox Ally or ROG Xbox Ally X.
+5)  Vulkan applications running under Radeon Developer Panel with Crash Analysis enabled may not disconnect properly.
+    When a Vulkan app is closed manually without triggering a TDR, the Vulkan driver can keep the process alive.
+    RDP never receives a client disconnect, leaving a zombie process visible in Task Manager even after closing RDP.
+
+* Linux®
+
+1)  With the introduction of 25.20-based Linux drivers, the AMDVLK driver is no longer included in the amdgpu-pro driver package. 
+    This is a result of the AMDVLK open-source project being discontinued as mentioned here (https://github.com/GPUOpen-Drivers/AMDVLK/discussions/416).
+    Instead, the RADV open-source Vulkan® driver is installed by default. Consequently, the Radeon Developer Panel does not support capturing data from
+    Vulkan applications when using these newer driver releases. To analyze Linux Vulkan workloads with Radeon GPU Profiler (RGP), Radeon Raytracing Analyzer (RRA),
+    or Radeon Memory Visualizer (RMV), users can opt for a 25.10-based driver. Alternatively, analysis can be performed using the data capture mechanism integrated
+    within the RADV driver, although this method is not supported by the Radeon Developer Panel. For more information on configuring RADV, refer to the environment
+    variable documentation, specifically the MESA_VK_TRACE_* environment variables (https://docs.mesa3d.org/envvars.html#envvar-MESA_VK_TRACE) which can be utilized
+    for enabling and configuring tracing.
+2)  After launching RGP from the panel to view a captured profile, the panel may fail to connect the next time
+    it is launched. The workaround is to close RGP before relaunching the panel.
+3)  If the panel or the service crash while running with the root account, it may be necessary
+    to restart/exit them again with the root account in order to clean up shared memory.
+4)  When running with the root account, the panel may output error or warning messages to the terminal.
+    These should not prevent the panel from functioning properly.
+5)  If the RadeonDeveloperServiceCLI application crashes, shared memory may need to be cleaned up by running the
+    remove_shared_memory.sh script located in the script folder of the RGP release kit. Run the script with elevated
+    privileges using sudo.
+6)  On some RDNA 3 hardware, detailed instruction timing data will not be available even when the user
+    asks to collect it.
+7)  Capturing traces using hotkeys is not currently supported when running under Wayland.
+
+Release Notes History
+-------------------------------------
+
+v3.4.1 Updates
+------------------------------
+
+1) Crash analysis now supports capturing wave SGPRs and VGPRs individually in crash dumps.
+2) Bug/stability fixes.
+
+v3.4.0 Updates
+------------------------------
+
+1) Support for additional AMD RDNA™ 4 hardware
+2) Support for additional AMD RDNA 3.5-based APUs
+3) Profiles captured on RDNA 3-based or RDNA 4-based hardware will now include additional memory-related counters
+4) Support for capturing wave SGPRs and VGPRs in crash dumps to get more information about the resource descriptors
+   used by an in-flight instruction at the time of the crash
+5) Bug/stability fixes
+
+v3.3.3 Updates
+-------------------------------------
+1) Add support for reading the driver version info in additional driver install scenarios.
+2) Fix a crash that may occur if the driver release date could not be read.
+
+v3.3.2 Updates
+-------------------------------------
+1) Support for ROG Xbox Ally and ROG Xbox Ally X devices with 25.10-based driver from July 28, 2025.
+
+v3.3.1 Updates
+-------------------------------------
+1) Support for additional AMD RDNA™ 4 hardware
+2) Added support for specifying PDB search paths for DXC shader debug information support in RGD.
+3) Added several new driver experiments available for Windows and Linux.
+4) Counter collection is now supported on AMD RDNA™ 3.5-based APUs (requires a 25.10-based driver or newer).
+
+v3.3.0 Updates
+-------------------------------------
+
+1) Support for AMD RDNA™ 4 hardware (AMD Radeon RX 9000 Series)
+2) Support for additional AMD RDNA 3-based APUs
+3) Support for profiling non-frame-based pure compute DirectX® 12 and Vulkan® applications (requires a 24.30-based driver or newer)
+4) Support for profiling DirectML applications (requires a 24.30-based driver or newer)
+5) Driver Experiments is now supported on Linux (requires a 24.30-based driver or newer)
+6) Added a new Hardware Crash Analysis option for capturing low level information about the GPU hardware
+   during a TDR dump.
+
+v3.2.0 Updates
+-------------------------------------
+
+1) New feature Driver Experiments offers a way to change the behavior and performance characteristics
+   of a game or other graphics application. (See Known Issues for details and Linux® compatability)
+2) Support for Light and Dark mode with an option to match the system theme.
+3) Bug/stability fixes.
+
+v3.1.0 Updates
+-------------------------------------
+
+1) Updated to use Qt 6.7.0.
+2) Enabling shader instrumentation (to support showing thread divergence in Radeon GPU Profiler's ray tracing shader table UI)
+   for Vulkan® is now supported starting with 24.10-based drivers.
+3) Bug/stability fixes.
+
+v3.0.0 Updates
+-----------------------------------------
+
+1)  Completely redesigned UI for better usability, stability, and performance.
+2)  Workflows have been replaced with Presets and modified feature settings are now persistent across launches of the panel.
+3)  New Output Log view shows detailed logging information.
+4)  Bug/stability fixes.
+

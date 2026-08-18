@@ -1,0 +1,313 @@
+/*************************************/
+/* Global / Qt
+/*************************************/
+
+QGroupBox
+{
+    font-size: 9.75pt;
+}
+
+QRadioButton
+{
+    font-size: 8pt;
+}
+
+QLabel, QPushButton
+{
+    font-size: 9.75pt;
+}
+
+/*************************************/
+/* Global / QtCommon
+/*************************************/
+
+ArrowIconWidget, ArrowIconComboBox
+{
+    background: white;
+    border: none;
+    font-size: 9.75pt;
+    text-align:left;
+}
+
+ArrowIconWidget, ArrowIconComboBox
+{
+    background: white;
+    border: none;
+    font-size: 9.75pt;
+    text-align:left;
+}
+
+ListWidget
+{
+    font-size: 9.75pt;
+    text-align: left;
+    border: 1px solid gray;
+}
+
+ListWidget QCheckBox
+{
+    font-size: 9.75pt;
+    padding-left: 3px;
+}
+
+ListWidget QLabel
+{
+    font-size: 9.75pt;
+    padding-left: 3px;
+}
+
+ListWidget::item:hover
+{
+    background: rgb(214, 214, 214);
+}
+
+ListWidget::item:selected
+{
+    background: rgb(143, 193, 231);
+}
+
+ListWidget::item
+{
+    border-bottom: none;
+}
+
+CheckBoxWidget
+{
+    font-size: 9.75pt;
+}
+
+ColoredLegendGraphicsView
+{
+    font-size: 9.75pt;
+}
+
+FileLoadingWidget
+{
+    background-color: rgb(255, 255, 255);
+    color: gray;
+}
+
+NavigationListWidget
+{
+    font: bold 8pt;
+}
+
+QTreeView#clientList
+{
+    border-right: 2px groove gray;
+    outline: none;
+    border: none;
+}
+
+#clientList::item:hover
+{
+    background: rgb(214, 214, 214);
+}
+
+#clientList::item:selected
+{
+    background: rgb(143, 193, 231);
+}
+
+#clientList::item
+{
+    border-bottom: none;
+    padding: 7px;
+}
+
+RecentTraceMiniWidget
+{
+    font-size: 9.75pt;
+}
+
+QTableView, QTreeView
+{
+    font-size: 9pt;
+}
+
+ScaledHeaderView
+{
+    font: bold 9pt;
+}
+
+QCheckBox
+{
+    font-size: 9.75pt;
+}
+
+RdpComboBox
+{
+    font-size: 9.75pt;
+}
+
+RdpSpinBox, DriverSettingsSpinBoxBase
+{
+    font:  9pt;
+}
+
+QTabWidget
+{
+    font:  bold 8pt;
+}
+
+QLabel, QPushButton
+{
+    font-size: 9.75pt;
+}
+
+QLineEdit
+{
+   font-size: 9.75pt;
+}
+
+TextSearchWidget
+{
+   font-size: 9.75pt;
+   border: 1px solid gray;
+   background: white;
+}
+
+/*************************************/
+/* RDP
+/*************************************/
+
+rdp--NavigationTabWidget > QTabBar
+{
+    font: bold 10pt;
+}
+
+rdp--NavigationTabWidget > QTabBar::tab
+{
+    background: rgb(51,51,51);
+    color: #666;
+    bottom: 1px;
+}
+
+QMainWindow #SyncButton {
+    border-style: outset;
+    qproperty-iconSize: 28px;
+}
+
+rdp--NavigationTabWidget > QTabBar::tab::top {
+    margin: 0px 0px 0 0;
+    padding: 4px 8px;
+    border-bottom: 4px solid transparent;
+}
+
+rdp--NavigationTabWidget > QTabBar::tab::selected {
+    color: white;
+}
+
+rdp--NavigationTabWidget > QTabBar::tab:top:hover {
+    border-bottom: 4px solid rgb(135,20,16);
+}
+
+
+rdp--NavigationTabWidget > QTabBar::tab:top:selected {
+    border-bottom: 4px solid rgb(224,30,55);
+}
+
+rdp--NavigationTabWidget > QTabBar::tab:!selected:hover {
+    color: #999;
+}
+
+rdp--SidebarWidget#sidebar, ScrollablePaneContents { background: palette(light); border-right: 1px solid palette(mid); }
+
+rdp--NavigationTabWidget > QTabBar::tab::last {
+    alignment: right;
+}
+
+rdp--NavigationTabWidget > QTabBar::tab::disabled:selected {
+    border-bottom: none;
+}
+
+QMainWindow #HelpButton, #SettingsButton, #BugReportButton {
+    margin: 0px;
+    padding: 0px;
+    border-radius: 3px;
+    border: 2px solid rgb(135,20,16);
+    font: bold 14pt;
+    color: #999;
+    min-width: 1.2em;
+    min-height: 1.0em;
+}
+
+/** Add some additional spacing so the settings and help button don't touch */
+QMainWindow #SettingsButton, #BugReportButton {
+    margin-right: 18px
+}
+
+QMainWindow #HelpButton:hover, #SettingsButton:hover, #BugReportButton:hover {
+    border-color: rgb(224,30,55);
+    color: white;
+}
+
+QMainWindow RdpComboBox
+{
+    font-size: 8pt;
+}
+
+CheckBoxWidget::indicator::checked::disabled
+{
+    image: url(:/checkbox_on_gray.svg);
+}
+
+CheckBoxWidget::indicator::unchecked::disabled
+{
+    image: url(:/checkbox_off_gray.svg);
+}
+
+CheckBoxWidget::indicator:checked
+{
+    image: url(:/checkbox_on.svg);
+}
+CheckBoxWidget::indicator:unchecked
+{
+    image: url(:/checkbox_off.svg);
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: transparent;
+    margin: 5px 5px 5px 5px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: palette(dark);
+    min-height: 80px;
+}
+
+QScrollBar::add-line:vertical {
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical {
+    height: 0 px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background: transparent;
+    margin: 5px 5px 5px 5px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: palette(dark);
+    min-width: 80px;
+}
+
+QScrollBar::add-line:horizontal {
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal {
+    height: 0 px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}

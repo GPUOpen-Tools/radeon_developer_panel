@@ -1,0 +1,7 @@
+{
+  "output_path": "C:\\Users\\developer\\Documents\\rgd_dumps\\$(APP_NAME)",
+  "generate_text_summary": true,
+  "generate_json_summary": true,
+  "show_marker_source": true,
+  "expand_markers": true
+}

@@ -1,0 +1,55 @@
+{
+  "current": {
+    "modules": {}
+  },
+  "presets": [
+    {
+      "name": "Profiling",
+      "builtin": true,
+      "modules": {
+        "Profiling": {
+          "enabled": true
+        },
+        "DeviceClocks": {
+          "enabled": true
+        }
+      }
+    },
+    {
+      "name": "Memory Trace",
+      "builtin": true,
+      "modules": {
+        "MemoryTrace": {
+          "enabled": true
+        },
+        "DeviceClocks": {
+          "enabled": true
+        }
+      }
+    },
+    {
+      "name": "Raytracing",
+      "builtin": true,
+      "modules": {
+        "Raytracing": {
+          "enabled": true
+        },
+        "DeviceClocks": {
+          "enabled": true
+        }
+      }
+    },
+    {
+      "name": "Crash Analysis",
+      "builtin": true,
+      "modules": {
+        "CrashAnalysis": {
+          "enabled": true
+        },
+        "DeviceClocks": {
+          "enabled": true
+        }
+      }
+    }
+  ]
+}
