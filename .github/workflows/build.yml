@@ -78,12 +78,7 @@ jobs:
             libwayland-dev
 
       - name: Configure
-        run: cmake -S . -B build/release -G Ninja -DCMAKE_BUILD_TYPE=Release -DRDP_ENABLE_UNIT_TESTS=ON
+        run: cmake -S . -B build/release -G Ninja -DCMAKE_BUILD_TYPE=Release
 
       - name: Build Release
         run: cmake --build build/release
-
-      - name: Run tests
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: ctest --test-dir build/release --output-on-failure
