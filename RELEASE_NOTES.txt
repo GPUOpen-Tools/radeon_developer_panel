@@ -1,11 +1,13 @@
-Radeon™ Developer Panel v3.5.0
+Radeon™ Developer Panel v3.5.1
 ------------------------------
 
-1) New RDP Command Line Interface (CLI) for scripted and automated workflows.
-2) Driver Experiments and Device Clocks moved to new System tab.
-3) Display all drivers in the System Info widget with per-GPU driver version information.
-4) Render operation count UI added to the profiling view.
-5) Bug/stability fixes.
+1) Marker-based capture for Radeon Raytracing Analyzer (RRA) scenes. Captures can now be triggered by user
+   markers embedded in the application instead of the capture button or hotkey, from both the panel UI and
+   the command line interface. The panel arms the capture automatically when the application starts; on the
+   command line, request it with the capture command, or automatically with --rra-auto-capture and
+   --rra-auto-capture-delay. Requires AMD driver version 26.20 or newer.
+2) Support for additional AMD RDNA™ 3.5-based APUs.
+3) Bug/stability fixes.
 
 Known Issues
 -----------------------------------------
@@ -18,12 +20,14 @@ Known Issues
     When this happens, Radeon Developer Panel will prompt the user to recapture.
 4)  In some rare cases, data for one or more cache counters may be missing. Usually, recapturing will allow the missing
     data to show up.
-5)  Cache and ray tracing counter data collection is not currently supported on RDNA based APUs.
+5)  On APUs, cache and ray tracing counter data collection is supported only on RDNA 3.5-based APUs
+    (requires a 25.10-based driver or newer).
 6)  For systems consisting of an AMD APU and an AMD discrete GPU, capturing profiles should work, but an error
     may be logged in the Radeon Developer Panel regarding not being able to set peak clock mode.
     It is recommended that the GPU in the APU be disabled in the BIOS.
 7)  Crash Analysis is not supported on RX 6750 XT.
-8)  New Hardware Crash Analysis option is not supported on APUs.
+8)  On APUs, Hardware Crash Analysis is supported only on RDNA 3.5-based APUs. It requires a 25.10-based driver
+    or newer on Strix Point APUs, and a 25.20-based driver or newer on Strix Halo and Krackan Point APUs.
 
 
 * Windows®
@@ -33,10 +37,7 @@ Known Issues
 2)  On RDNA 2 cards (AMD Radeon RX 6000 series), in certain situations, the "Disable depth-stencil texture compression"
     experiment has no impact.
 3)  Counter collection is not supported on ROG Xbox Ally.
-4)  Crash Analysis is not supported on ROG Xbox Ally or ROG Xbox Ally X.
-5)  Vulkan applications running under Radeon Developer Panel with Crash Analysis enabled may not disconnect properly.
-    When a Vulkan app is closed manually without triggering a TDR, the Vulkan driver can keep the process alive.
-    RDP never receives a client disconnect, leaving a zombie process visible in Task Manager even after closing RDP.
+4)  Crash Analysis is not supported on ROG Xbox Ally.
 
 * Linux®
 
@@ -63,6 +64,15 @@ Known Issues
 
 Release Notes History
 -------------------------------------
+
+v3.5.0 Updates
+------------------------------
+
+1) New RDP Command Line Interface (CLI) for scripted and automated workflows.
+2) Driver Experiments and Device Clocks moved to new System tab.
+3) Display all drivers in the System Info widget with per-GPU driver version information.
+4) Render operation count UI added to the profiling view.
+5) Bug/stability fixes.
 
 v3.4.1 Updates
 ------------------------------
