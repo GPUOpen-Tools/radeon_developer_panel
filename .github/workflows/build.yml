@@ -1,0 +1,87 @@
+name: Build
+
+on:
+  push:
+    branches: [master, 'dev/**']
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    name: ${{ matrix.os-name }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2022
+            os-name: Windows
+            qt-arch: win64_msvc2019_64
+          - runner: ubuntu-24.04
+            os-name: Ubuntu
+            qt-arch: linux_gcc_64
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install Ninja
+        run: python -m pip install ninja
+
+      - name: Set up MSVC environment (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      # install-qt-action exports Qt6_DIR, which find_package(Qt6) picks up. CMAKE_PREFIX_PATH is intentionally
+      # not set: on Linux that makes devtools_qt_helper.cmake patchelf a libicudata.so.70 dependency into Qt
+      # targets, which the aqt Qt build and the Ubuntu 24.04 runner do not provide.
+      - name: Install Qt (Windows)
+        if: runner.os == 'Windows'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.0'
+          arch: ${{ matrix.qt-arch }}
+          dir: 'C:\'
+          cache: true
+
+      - name: Install Qt (Ubuntu)
+        if: runner.os == 'Linux'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.0'
+          arch: ${{ matrix.qt-arch }}
+          dir: '${{ github.workspace }}'
+          modules: 'qtwaylandcompositor'
+          cache: true
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y \
+            build-essential \
+            chrpath \
+            patchelf \
+            libxcb-xinerama0 \
+            libxcb-cursor-dev \
+            mesa-common-dev \
+            libglu1-mesa-dev \
+            libgl1-mesa-dev \
+            libx11-xcb-dev \
+            libxkbcommon-x11-dev \
+            libwayland-dev \
+            pkg-config \
+            libtraceevent-dev \
+            libtracefs-dev
+
+      - name: Configure
+        run: cmake -S . -B build/release -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build Release
+        run: cmake --build build/release
