@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     try
     {
 #ifdef _WIN32
-        SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32);
+        SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
 #endif
         CommandLineParser command_line_parser(argc, argv);
 

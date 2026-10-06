@@ -58,7 +58,7 @@ namespace rdp
         {
             setWindowIcon(QIcon(":/RDP_Icon.ico"));
 #ifdef _WIN32
-            SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32);
+            SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
 #endif
 
             setStyle(QStyleFactory::create("fusion"));
