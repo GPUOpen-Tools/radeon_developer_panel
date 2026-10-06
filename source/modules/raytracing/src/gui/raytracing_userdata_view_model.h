@@ -83,6 +83,10 @@ public slots:
     /// @param [in] marker_string The new marker end string.
     void HandleMarkerEndStringChanged(const QString& marker_string);
 
+    /// @brief Handles when prelaunch settings become editable or read-only.
+    /// @param [in] editable true if no application is connected, false otherwise.
+    void HandlePrelaunchSettingsEditableChanged(bool editable);
+
 signals:
 
     void EnableRayHistoryChanged(bool enable_ray_history);
@@ -117,11 +121,29 @@ signals:
     /// @param [in] supported true if marker-based capture is supported by the driver.
     void MarkerCaptureSupportedChanged(bool supported);
 
+    /// @brief Emitted when prelaunch settings become editable or read-only.
+    /// @param [in] editable true if the settings can be edited.
+    void PrelaunchSettingsEditableChanged(bool editable);
+
+    /// @brief Emitted when the settings that a marker auto-capture depends on become editable or read-only.
+    /// @param [in] editable true if the settings can be edited.
+    void AutoCaptureSettingsEditableChanged(bool editable);
+
 private:
-    std::weak_ptr<devtrace::RraTraceSource> rra_trace_source_;              ///< Trace source.
-    bool                                    enable_ray_history_;            ///< true if ray history is enabled, false otherwise.
-    bool                                    should_delay_capture_ = false;  ///< true if the capture should be delayed, false otherwise.
-    uint32_t                                capture_delay_        = 100;    ///< The capture delay in milliseconds.
+    /// @brief Arms an automatic trace request when marker capture is enabled and supported, as RGP auto-capture does.
+    /// @param [in] config The RRA trace source configuration to update.
+    static void ApplyMarkerAutoCapture(devtrace::RraTraceSourceConfig& config);
+
+    /// @brief Emits the editable state of the settings that a marker auto-capture depends on.
+    void EmitAutoCaptureSettingsEditable();
+
+    static constexpr uint32_t kDefaultCaptureDelayMs = 100;  ///< The capture delay used until userdata is applied.
+
+    std::weak_ptr<devtrace::RraTraceSource> rra_trace_source_;                                      ///< Trace source.
+    bool                                    enable_ray_history_          = false;                   ///< true if ray history is enabled, false otherwise.
+    bool                                    should_delay_capture_        = false;                   ///< true if the capture should be delayed, false otherwise.
+    uint32_t                                capture_delay_               = kDefaultCaptureDelayMs;  ///< The capture delay in milliseconds.
+    bool                                    prelaunch_settings_editable_ = true;                    ///< true if no application is connected.
 };
 
 #endif

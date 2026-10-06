@@ -115,6 +115,7 @@ typedef enum
 {
     kRdpCaptureRaytracingEnableParamFlagNone                = 0,  ///< No flags.
     kRdpCaptureRaytracingEnableParamFlagEnableMarkerCapture = 1,  ///< Enables marker-based capture instead of frame-based.
+    kRdpCaptureRaytracingEnableParamFlagUseAutoCapture      = 2,  ///< Requests a capture automatically after the application creates its device (API 1.1+).
 
 } RdpCaptureRaytracingEnableParamFlags;
 
@@ -123,8 +124,9 @@ typedef struct RdpCaptureRaytracingEnableParams
 {
     uint32_t flags;  ///< RdpCaptureRaytracingEnableParamFlags.
 
-    const char* marker_begin_string;  ///< The marker string that starts the capture (only used if marker capture is enabled).
-    const char* marker_end_string;    ///< The marker string that ends the capture (only used if marker capture is enabled).
+    uint32_t    auto_capture_delay_ms;  ///< Delay in milliseconds before auto-capture fires (only used if auto-capture is enabled).
+    const char* marker_begin_string;    ///< The marker string that starts the capture (only used if marker capture is enabled).
+    const char* marker_end_string;      ///< The marker string that ends the capture (only used if marker capture is enabled).
 } RdpCaptureRaytracingEnableParams;
 
 /// @brief Bitmask for RdpCaptureCrashAnalysisEnableParams flags.
@@ -935,11 +937,11 @@ typedef struct RdpCaptureFnTable
 ///@brief The major version of the API.
 #define RDP_CAPTURE_API_VERSION_MAJOR 1
 
-/// @brief The minor version of the API.
-#define RDP_CAPTURE_API_VERSION_MINOR 0
+/// @brief The minor version of the API. 1.1 added kRdpCaptureRaytracingEnableParamFlagUseAutoCapture.
+#define RDP_CAPTURE_API_VERSION_MINOR 1
 
 /// @brief The patch version of the API.
-#define RDP_CAPTURE_API_VERSION_PATCH 1
+#define RDP_CAPTURE_API_VERSION_PATCH 0
 
 /// @brief Get the function table.
 /// @param [in] major_version The desired major version.

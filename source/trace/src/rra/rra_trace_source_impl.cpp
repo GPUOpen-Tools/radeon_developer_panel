@@ -120,6 +120,15 @@ namespace devtrace
         return Result::kSuccess;
     }
 
+    std::optional<UbertraceAutoCaptureConfig> RraClient::GetAutoCaptureConfig(const RraTraceSourceConfigPrivate& config)
+    {
+        if (config.config.auto_capture_enabled)
+        {
+            return UbertraceAutoCaptureConfig{config.config.auto_capture_delay_ms, 0};
+        }
+        return {};
+    }
+
     bool RraClient::SupportsCaptureMode(const uint32_t mode) const
     {
         return mode == 0;
@@ -148,7 +157,7 @@ namespace devtrace
 
     DisabledReason RraTraceSourceImpl::GetReasonRraShouldBeDisabled(const system_info_utils::SystemInfo& system_info)
     {
-        if (IsDriverTooOld(system_info.driver, kMinimumRaytracingDriverMajorVersion, kMinimumRaytracingDriverMinorVersion))
+        if (IsDriverTooOld(GetNewestDriver(system_info), kMinimumRaytracingDriverMajorVersion, kMinimumRaytracingDriverMinorVersion))
         {
             return DisabledReason::kDriverUnsupported;
         }
@@ -179,19 +188,21 @@ namespace devtrace
 
     bool RraTraceSourceImpl::IsRayHistorySupported(const system_info_utils::SystemInfo& system_info)
     {
-        return !IsDriverTooOld(system_info.driver, kMinimumRayHistoryDriverMajorVersion, kMinimumRayHistoryDriverMinorVersion);
+        return !IsDriverTooOld(GetNewestDriver(system_info), kMinimumRayHistoryDriverMajorVersion, kMinimumRayHistoryDriverMinorVersion);
     }
 
     bool RraTraceSourceImpl::IsMarkerCaptureSupported(const system_info_utils::SystemInfo& system_info)
     {
-        if (!IsDriverTooOld(system_info.driver, kMinimumMarkerCaptureDriverMajorVersion, kMinimumMarkerCaptureDriverMinorVersion))
+        const auto& driver = GetNewestDriver(system_info);
+
+        if (!IsDriverTooOld(driver, kMinimumMarkerCaptureDriverMajorVersion, kMinimumMarkerCaptureDriverMinorVersion))
         {
             return true;
         }
 
         // Also allow marker capture on the specific pre-release driver 26.10.07.02.
         static constexpr const char* kMarkerCapturePreReleaseDriver = "26.10.07.02";
-        return system_info.driver.software_version == kMarkerCapturePreReleaseDriver;
+        return driver.software_version == kMarkerCapturePreReleaseDriver;
     }
 
     RraTraceSourceImpl::RraTraceSourceImpl(const std::shared_ptr<ReadWriteStreamProvider>& stream_provider,

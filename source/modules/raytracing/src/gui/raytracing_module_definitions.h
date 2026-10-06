@@ -15,6 +15,11 @@ static constexpr const char* kRayHistoryBufferSizeIndexKey = "ray_history_buffer
 static constexpr const char* kRayHistoryBufferCustomKey    = "ray_history_buffer_size_custom";
 static const constexpr int   kCaptureKeyId                 = 2;
 
+/// Delay between the application's driver finishing device init and the automatic trace request made when marker
+/// capture is enabled. The driver registers its ray tracing trace sources shortly after device init, and a trace
+/// requested before that has no acceleration structure or ray history data. 500 ms is an estimate that should be safe on any device.
+static constexpr uint32_t kMarkerCaptureArmDelayMs = 500;
+
 using RayHistoryBufferSizeIndex = devtrace::RayHistoryBufferIndex;
 
 #endif

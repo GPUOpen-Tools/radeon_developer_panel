@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
     MainWindow main_window;
 
 #ifdef _WIN32
-    SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32);
+    SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
 #endif
 
 #ifndef Q_OS_WIN

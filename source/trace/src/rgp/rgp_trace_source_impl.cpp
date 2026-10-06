@@ -58,6 +58,7 @@ namespace
         const uint32_t            asic_e_revision = gpu.asic.id_info.e_rev;
         const uint32_t            device_id       = gpu.asic.id_info.device;
         const devtrace::GpuSeries gpu_series      = devtrace::AsicInfo::GetGpuSeries(0, asic_family, asic_e_revision);
+        const auto&               driver          = devtrace::GetNewestDriver(system_info);
 
         if (const bool is_explicitly_disabled = std::ranges::find(kSpmDisabledGpuSeries, gpu_series) != kSpmDisabledGpuSeries.end();
             gpu_series < devtrace::GpuSeries::kNavi1 || is_explicitly_disabled)
@@ -69,7 +70,7 @@ namespace
         if (gpu_series >= devtrace::GpuSeries::kNavi2)
         {
             if (const bool is_linux = system_info.os.desc.find("Linux") != std::string::npos;
-                is_linux && devtrace::IsDriverTooOld(system_info.driver, kMinimumLinuxSpmNavi2DriverMajorVersion, kMinimumLinuxSpmNavi2DriverMinorVersion))
+                is_linux && devtrace::IsDriverTooOld(driver, kMinimumLinuxSpmNavi2DriverMajorVersion, kMinimumLinuxSpmNavi2DriverMinorVersion))
             {
                 return false;
             }
@@ -80,8 +81,7 @@ namespace
         if (const bool is_special_hardware = device_id == kZ2ANavi2Id; is_conditionally_disabled || is_special_hardware)
         {
             // Check driver version support for this GPU series
-            if (devtrace::IsDriverTooOld(
-                    system_info.driver, kMinimumSPMSupportForRdna3_5APUDriverMajorVersion, kMinimumSPMSupportForRdna3_5APUDriverMinorVersion))
+            if (devtrace::IsDriverTooOld(driver, kMinimumSPMSupportForRdna3_5APUDriverMajorVersion, kMinimumSPMSupportForRdna3_5APUDriverMinorVersion))
             {
                 return false;
             }
@@ -90,7 +90,7 @@ namespace
         if (gpu_series == kSpmConditionalDisabledRdna3ApuSeries)
         {
             // Check driver version support for this GPU series
-            if (devtrace::IsDriverTooOld(system_info.driver, kMinimumSPMSupportForRdna3APUDriverMajorVersion, kMinimumSPMSupportForRdna3APUDriverMinorVersion))
+            if (devtrace::IsDriverTooOld(driver, kMinimumSPMSupportForRdna3APUDriverMajorVersion, kMinimumSPMSupportForRdna3APUDriverMinorVersion))
             {
                 return false;
             }
@@ -283,13 +283,14 @@ namespace devtrace
         }
 
         const auto& system_info = e_system_info.value();
+        const auto& driver      = GetNewestDriver(system_info);
 
         base_trace_source_.GetConfig().ubertrace_supported =
-            !IsDriverTooOld(system_info.driver, kMinimumUberTraceSupportDriverMajorVersion, kMinimumUberTraceSupportDriverMinorVersion);
+            !IsDriverTooOld(driver, kMinimumUberTraceSupportDriverMajorVersion, kMinimumUberTraceSupportDriverMinorVersion);
 
         RgpTraceSourceSupportEventArgs support_event_args{};
-        support_event_args.is_shader_instrumentation_supported_universally = !IsDriverTooOld(
-            system_info.driver, kMinimumShaderInstrumentationUniversalDriverMajorVersion, kMinimumShaderInstrumentationUniversalDriverMinorVersion);
+        support_event_args.is_shader_instrumentation_supported_universally =
+            !IsDriverTooOld(driver, kMinimumShaderInstrumentationUniversalDriverMajorVersion, kMinimumShaderInstrumentationUniversalDriverMinorVersion);
         support_event_args.is_instruction_tracing_supported = true;
 
         // Check if exec/pop tokens are supported (RDNA4/NAVI4X or newer)
@@ -312,7 +313,7 @@ namespace devtrace
 
         client_factory_->SetSpmSupportedGpus(spm_supported_gpus);
         client_factory_->SetGpus(system_info.gpus);
-        client_factory_->SetDriver(system_info.driver);
+        client_factory_->SetDriver(driver);
         client_factory_->SetUbertraceFeatures(UbertraceFeatures(system_info));
     }
 

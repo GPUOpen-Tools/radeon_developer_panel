@@ -575,7 +575,7 @@ TEST_F(RaytracingViewModelTest, RequestAbortGracefullyFails)
 
     QSignalSpy trace_aborted_spy(model.get(), &RaytracingViewModel::TraceAborted);
 
-    EXPECT_CALL(*trace_source, RequestAbortTrace()).Times(1).WillOnce(::testing::Return(devtrace::Result::kFailure));
+    EXPECT_CALL(*trace_source, RequestAbortTrace(::testing::_)).Times(1).WillOnce(::testing::Return(devtrace::Result::kFailure));
 
     model->RequestAbort();
 
@@ -864,4 +864,131 @@ TEST_F(RaytracingViewModelTest, HandlesStatusWithVulkanApi)
 
     EXPECT_GE(capture_ui_spy.count(), 1);
     EXPECT_GE(ui_status_spy.count(), 1);
+}
+
+// Marker auto-capture tests
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class RaytracingMarkerAutoCaptureTest : public RaytracingViewModelTest
+{
+protected:
+    /// @brief Creates a userdata view model bound to the mocked trace source, with marker capture set as given.
+    std::shared_ptr<RaytracingUserdataViewModel> MakeUserdataModel(bool marker_capture_enabled, bool marker_capture_supported)
+    {
+        mock_config_.enable_marker_capture       = marker_capture_enabled;
+        mock_config_.is_marker_capture_supported = marker_capture_supported;
+
+        std::function<void(const std::string&)> apply_fn = [](const std::string&) {};
+        auto                                    model    = std::make_shared<RaytracingUserdataViewModel>(std::make_shared<devtrace::RraUserdataMapper>(),
+                                                                   trace_source,
+                                                                   std::shared_ptr<PrelaunchSettingsHelper>(nullptr),
+                                                                   kRraScenesDefaultParentFolder,
+                                                                   apply_fn);
+
+        devtrace::RraTraceSourceSupportEventArgs args{};
+        args.is_marker_capture_supported = marker_capture_supported;
+        model->HandleTraceSupportChanged(args);
+
+        return model;
+    }
+};
+
+TEST_F(RaytracingMarkerAutoCaptureTest, ArmsAutoCaptureWhenMarkerCaptureIsEnabledAndSupported)
+{
+    auto model = MakeUserdataModel(true, true);
+
+    EXPECT_TRUE(mock_config_.auto_capture_enabled);
+    EXPECT_EQ(mock_config_.auto_capture_delay_ms, kMarkerCaptureArmDelayMs);
+}
+
+TEST_F(RaytracingMarkerAutoCaptureTest, DoesNotArmAutoCaptureWhenMarkerCaptureIsUnsupported)
+{
+    auto model = MakeUserdataModel(true, false);
+
+    EXPECT_FALSE(mock_config_.auto_capture_enabled);
+    EXPECT_EQ(mock_config_.auto_capture_delay_ms, 0u);
+}
+
+TEST_F(RaytracingMarkerAutoCaptureTest, DoesNotArmAutoCaptureWhenMarkerCaptureIsDisabled)
+{
+    auto model = MakeUserdataModel(false, true);
+
+    EXPECT_FALSE(mock_config_.auto_capture_enabled);
+    EXPECT_EQ(mock_config_.auto_capture_delay_ms, 0u);
+}
+
+TEST_F(RaytracingMarkerAutoCaptureTest, ArmsAutoCaptureWhenMarkerUserdataArrivesAfterSupport)
+{
+    // Support is already known when the user enables marker capture, so arming happens on the userdata path.
+    auto model = MakeUserdataModel(false, true);
+    ASSERT_FALSE(mock_config_.auto_capture_enabled);
+
+    devtrace::RraUserdata userdata{};
+    userdata.enable_marker_capture = true;
+    auto serialized                = devtrace::RraUserdataMapper().Serialize(userdata);
+    ASSERT_TRUE(serialized.has_value());
+
+    EXPECT_TRUE(model->ReceiveUserData(serialized.value()));
+    EXPECT_TRUE(mock_config_.enable_marker_capture);
+    EXPECT_TRUE(mock_config_.auto_capture_enabled);
+    EXPECT_EQ(mock_config_.auto_capture_delay_ms, kMarkerCaptureArmDelayMs);
+
+    // Disabling it again disarms.
+    userdata.enable_marker_capture = false;
+    serialized                     = devtrace::RraUserdataMapper().Serialize(userdata);
+    ASSERT_TRUE(serialized.has_value());
+
+    EXPECT_TRUE(model->ReceiveUserData(serialized.value()));
+    EXPECT_FALSE(mock_config_.auto_capture_enabled);
+    EXPECT_EQ(mock_config_.auto_capture_delay_ms, 0u);
+}
+
+TEST_F(RaytracingMarkerAutoCaptureTest, DisarmsAutoCaptureWhenSupportIsLost)
+{
+    auto model = MakeUserdataModel(true, true);
+    ASSERT_TRUE(mock_config_.auto_capture_enabled);
+
+    // A router disconnect reports marker capture as unsupported without clearing the trace source config.
+    model->HandleTraceSupportChanged(devtrace::RraTraceSourceSupportEventArgs{});
+
+    EXPECT_FALSE(mock_config_.is_marker_capture_supported);
+    EXPECT_FALSE(mock_config_.auto_capture_enabled);
+    EXPECT_EQ(mock_config_.auto_capture_delay_ms, 0u);
+}
+
+TEST_F(RaytracingMarkerAutoCaptureTest, LocksSettingsWhileConnectedWithMarkerCapture)
+{
+    auto model = MakeUserdataModel(true, true);
+
+    QSignalSpy prelaunch_spy(model.get(), &RaytracingUserdataViewModel::PrelaunchSettingsEditableChanged);
+    QSignalSpy auto_capture_spy(model.get(), &RaytracingUserdataViewModel::AutoCaptureSettingsEditableChanged);
+
+    model->HandlePrelaunchSettingsEditableChanged(false);
+
+    ASSERT_EQ(prelaunch_spy.count(), 1);
+    EXPECT_FALSE(prelaunch_spy.takeFirst().at(0).toBool());
+    ASSERT_EQ(auto_capture_spy.count(), 1);
+    EXPECT_FALSE(auto_capture_spy.takeFirst().at(0).toBool());
+
+    // Disconnecting unlocks everything again.
+    model->HandlePrelaunchSettingsEditableChanged(true);
+
+    ASSERT_EQ(auto_capture_spy.count(), 1);
+    EXPECT_TRUE(auto_capture_spy.takeFirst().at(0).toBool());
+}
+
+TEST_F(RaytracingMarkerAutoCaptureTest, KeepsCaptureSettingsEditableWhileConnectedWithoutMarkerCapture)
+{
+    auto model = MakeUserdataModel(false, true);
+
+    QSignalSpy prelaunch_spy(model.get(), &RaytracingUserdataViewModel::PrelaunchSettingsEditableChanged);
+    QSignalSpy auto_capture_spy(model.get(), &RaytracingUserdataViewModel::AutoCaptureSettingsEditableChanged);
+
+    model->HandlePrelaunchSettingsEditableChanged(false);
+
+    // Only the marker checkbox, a prelaunch setting, locks.
+    ASSERT_EQ(prelaunch_spy.count(), 1);
+    EXPECT_FALSE(prelaunch_spy.takeFirst().at(0).toBool());
+    ASSERT_EQ(auto_capture_spy.count(), 1);
+    EXPECT_TRUE(auto_capture_spy.takeFirst().at(0).toBool());
 }

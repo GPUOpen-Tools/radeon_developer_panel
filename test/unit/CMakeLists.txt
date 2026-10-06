@@ -18,6 +18,9 @@ add_executable(
         # Profiling Module
         modules/profiling/spm_counter_file_parser_test.cpp
 
+        # Raytracing Module
+        modules/raytracing/raytracing_model_test.cpp
+
         #        trace/rra_trace_source_test.cpp
         #        trace/rgp_trace_source_test.cpp
         #        trace/rgp_trace_source_config_test.cpp
@@ -43,17 +46,23 @@ add_executable(
         #trace/mock/mock_rgd_api.cpp
 
         # Module mocks
-        #modules/mock/mock_file_opener.h
-        #modules/mock/mock_file_stream_provider.h
-        #modules/mock/mock_file_utils.h
-        #modules/mock/mock_settings.h
-        #modules/mock/mock_settings.cpp
+        modules/mock/mock_file_opener.h
+        modules/mock/mock_file_stream_provider.h
+        modules/mock/mock_file_utils.h
+        modules/mock/mock_settings.h
+        modules/mock/mock_settings.cpp
         #modules/mock/mock_trace_timer.h
         #modules/mock/mock_trace_timer.cpp
 )
 
 set_target_properties(RDPUnitTests PROPERTIES FOLDER "Test")
 devtools_target_options(RDPUnitTests)
+
+# GCC 13 reports googletest's Matcher<T>::buffer_ as "used uninitialized" when a mock expectation copies
+# ::testing::_, which holds no data. -Wno-maybe-uninitialized from devtools_target_options() does not cover it.
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set_source_files_properties(modules/raytracing/raytracing_model_test.cpp PROPERTIES COMPILE_OPTIONS -Wno-uninitialized)
+endif ()
 
 target_link_libraries(
         RDPUnitTests
@@ -69,7 +78,7 @@ target_link_libraries(
         LibDevTrace
         #DevToolsMemoryTraceModule
         #DevToolsCrashAnalysisModule
-        #DevToolsRaytracingModule
+        DevToolsRaytracingModule
 )
 
 target_include_directories(RDPUnitTests

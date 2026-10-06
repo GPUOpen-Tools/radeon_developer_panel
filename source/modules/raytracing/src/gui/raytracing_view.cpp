@@ -86,6 +86,7 @@ void RaytracingView::SetupConnections()
     model_binder_.Connect(view_model.get(), &RaytracingViewModel::CaptureMissingRayHistory, this, &RaytracingView::OnCaptureMissingRayDispatchData);
     model_binder_.Connect(view_model.get(), &RaytracingViewModel::CaptureIncompleteRayHistory, this, &RaytracingView::OnCaptureIncompleteRayDispatchData);
     model_binder_.Connect(view_model.get(), &TraceSourceViewModel::ConnectedProcessTextChanged, this, &SplitClientView::SetConnectedProcessText);
+    model_binder_.Connect(view_model.get(), &TraceSourceViewModel::ConnectedProcessTextChanged, this, &RaytracingView::OnConnectedProcessTextChanged);
     model_binder_.Connect(view_model.get(), &TraceSourceViewModel::ClientStatusChanged, this, &SplitClientView::SetStatus);
     model_binder_.Connect(view_model.get(), &TraceSourceViewModel::CurrentConnectionsChanged, this, &RaytracingView::OnCurrentConnectionsChanged);
     model_binder_.Connect(view_model.get(), &TraceSourceViewModel::UiStatusChanged, this, &RaytracingView::OnUiStatusChanged);
@@ -107,7 +108,7 @@ void RaytracingView::SetupConnections()
                           view_model.get(),
                           static_cast<void (RaytracingViewModel::*)()>(&RaytracingViewModel::RequestAbort));
 
-    model_binder_.Connect(ui_->hotkey_edit, &GlobalShortcutEdit::ShortcutTriggered, view_model.get(), &RaytracingViewModel::RequestBeginTrace);
+    model_binder_.Connect(ui_->hotkey_edit, &GlobalShortcutEdit::ShortcutTriggered, this, &RaytracingView::OnHotkeyTriggered);
 
     const auto userdata_model = userdata_view_model_.lock();
     Q_ASSERT(userdata_model != nullptr);
@@ -116,6 +117,8 @@ void RaytracingView::SetupConnections()
         ui_->hotkey_edit, &GlobalShortcutEdit::ShortcutChanged, userdata_model.get(), &RaytracingUserdataViewModel::HandleCaptureShortcutChanged);
 
     model_binder_.Connect(userdata_model.get(), &RaytracingUserdataViewModel::CaptureShortcutChanged, this, &RaytracingView::OnUserDataShortcutChanged);
+    model_binder_.Connect(
+        userdata_model.get(), &RaytracingUserdataViewModel::AutoCaptureSettingsEditableChanged, this, &RaytracingView::OnAutoCaptureSettingsEditableChanged);
 
     // Forward TraceSupportChanged from RaytracingViewModel to RaytracingUserdataViewModel
     model_binder_.Connect(
@@ -198,6 +201,56 @@ void RaytracingView::OnCurrentConnectionsChanged(const std::unordered_map<DDConn
 {
     current_connection_model_->OnCurrentConnectionsChanged(connections);
     ui_->active_connection_selection->setEnabled(current_connection_model_->IsSelectionEnabled());
+
+    UpdatePrelaunchSettingsEditable();
+}
+
+void RaytracingView::OnConnectedProcessTextChanged([[maybe_unused]] const QString& connected_process_text) const
+{
+    // Also covers a client disconnecting after an auto-capture left it done, where the connections may not change.
+    UpdatePrelaunchSettingsEditable();
+}
+
+void RaytracingView::UpdatePrelaunchSettingsEditable() const
+{
+    const auto view_model     = view_model_.lock();
+    const auto userdata_model = userdata_view_model_.lock();
+    if (view_model == nullptr || userdata_model == nullptr)
+    {
+        return;
+    }
+
+    // Prelaunch settings are editable when no application is connected
+    userdata_model->HandlePrelaunchSettingsEditableChanged(view_model->GetSourceStatus().pid == 0);
+}
+
+void RaytracingView::OnAutoCaptureSettingsEditableChanged(const bool enabled)
+{
+    ui_->hotkey_edit->setEnabled(enabled);
+    ui_->capture_delay_widget->setEnabled(enabled);
+
+    // The marker auto-capture is requested automatically, so a manual capture would only race with it
+    auto_capture_settings_editable_ = enabled;
+    UpdateCaptureButton();
+}
+
+void RaytracingView::OnHotkeyTriggered() const
+{
+    // The global shortcut fires even while the hotkey editor is disabled, so don't let it race an armed marker auto-capture
+    if (!auto_capture_settings_editable_)
+    {
+        return;
+    }
+
+    if (const auto view_model = view_model_.lock(); view_model != nullptr)
+    {
+        view_model->RequestBeginTrace();
+    }
+}
+
+void RaytracingView::UpdateCaptureButton() const
+{
+    ui_->collect_data_button->setEnabled(ui_status_enabled_ && auto_capture_settings_editable_);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
@@ -234,7 +287,8 @@ void RaytracingView::OnTraceEnded()
     OnEnableCaptureUi();
 }
 
-void RaytracingView::OnUiStatusChanged(const bool should_enable) const
+void RaytracingView::OnUiStatusChanged(const bool should_enable)
 {
-    ui_->collect_data_button->setEnabled(should_enable);
+    ui_status_enabled_ = should_enable;
+    UpdateCaptureButton();
 }

@@ -48,13 +48,13 @@ Profiling (RGP) options
    * - Option
      - Description
    * - ``-a, --rgp-auto-capture <spec>``
-     - Auto-capture mode. Formats: ``frame[:N]`` captures at frame N (default 0); ``dispatch[:start[:count]]`` captures a range of dispatches.
+     - Auto-capture mode. Formats: ``frame[:N]`` captures at frame N (``N`` must be at least 5; default 5, as the trace controller reserves the first few frames for capture preparation); ``dispatch[:start[:count]]`` captures a range of dispatches (``start`` must be at least 1, default 1; ``count`` default 1).
    * - ``--rgp-auto-capture-delay <ms>``
      - Delay in milliseconds before dispatch auto-capture starts. Default: 0.
    * - ``--rgp-capture-mode <mode>``
-     - RGP capture mode: ``default``, ``frame``, ``draw``, ``dispatch``. ``default`` lets the driver choose based on the API. Default: ``default``.
+     - RGP capture mode: ``default``, ``frame``, ``draw``, ``dispatch``. ``default`` lets the driver choose based on the API. Any other value is rejected. Default: ``default``.
    * - ``--rgp-render-op-count <count>``
-     - Number of render operations to capture in ``draw`` or ``dispatch`` mode (ignored in ``frame`` mode). Default: 1.
+     - Number of render operations to capture in ``draw`` or ``dispatch`` mode (ignored in ``frame`` mode). Must be at least 1 when the capture mode is ``draw`` or ``dispatch``. Default: 1.
    * - ``--rgp-instruction-tracing``
      - Enable instruction-level tracing for detailed shader analysis.
    * - ``--rgp-counter-collection``
@@ -62,7 +62,7 @@ Profiling (RGP) options
    * - ``--rgp-shader-instrumentation``
      - Enable shader instrumentation.
    * - ``--rgp-sqtt-buffer-size <size>``
-     - SQTT buffer size: ``minimum``, ``low``, ``default``, ``high``, ``maximum``. Default: ``default``.
+     - SQTT buffer size: ``minimum``, ``low``, ``default``, ``high``, ``maximum``. An unrecognized value is not an error; it falls back to ``default``. Default: ``default``.
 
 Raytracing (RRA) options
 ------------------------
@@ -74,11 +74,55 @@ Raytracing (RRA) options
    * - Option
      - Description
    * - ``--rra-ray-history-buffer-size <size>``
-     - Ray history buffer size: ``disabled``, ``minimum``, ``low``, ``default``, ``high``, ``maximum``. Default: ``default``. This option requires ray dispatch data collection to be enabled; explicit arguments are rejected when ``--rra-collect-ray-dispatch-data=false``.
+     - Ray history buffer size: ``disabled``, ``minimum``, ``low``, ``default``, ``high``, ``maximum``. An unrecognized value is not an error; it falls back to ``default``. This option requires ray dispatch data collection to be enabled; explicit arguments are rejected when ``--rra-collect-ray-dispatch-data=false``. Default: ``default``.
    * - ``--rra-collect-ray-dispatch-data <true|false>``
      - Collect ray dispatch data (ray history). Pass ``--rra-collect-ray-dispatch-data=false`` to disable ray history collection. When disabled, explicit ``--rra-ray-history-buffer-size`` arguments are rejected by the CLI. Default: ``true``.
    * - ``--rra-delay-ms <ms>``
      - Delay in milliseconds before triggering each raytracing capture (0 = no delay). Default: 0.
+   * - ``--rra-auto-capture``
+     - Request the capture automatically when the application creates its graphics device, then exit, instead of waiting for the ``c`` (capture) interactive command. Combine with ``--rra-marker-capture`` to capture the region between the markers without any interaction.
+   * - ``--rra-auto-capture-delay <ms>``
+     - Delay in milliseconds between the application creating its graphics device and the automatic capture request. Requires ``--rra-auto-capture``; the CLI exits with an error otherwise. Default: 0.
+   * - ``--rra-marker-capture``
+     - Capture the region between user markers embedded in the application instead of a frame. The capture is still requested with the ``c`` interactive command, or automatically with ``--rra-auto-capture``; it then begins at the next begin marker. Requires **both** ``--rra-marker-begin`` and ``--rra-marker-end``; the CLI exits with an error if either is missing. Requires AMD driver version 26.20 or newer.
+   * - ``--rra-marker-begin <string>``
+     - Marker string that starts the capture. Only meaningful together with ``--rra-marker-capture``.
+   * - ``--rra-marker-end <string>``
+     - Marker string that ends the capture. Only meaningful together with ``--rra-marker-capture``.
+
+.. NOTE::
+    Marker-based capture requires AMD driver version 26.20 or newer. Unlike the
+    panel UI, the CLI does not supply default marker strings — ``--rra-marker-begin``
+    and ``--rra-marker-end`` must both be given explicitly whenever
+    ``--rra-marker-capture`` is used.
+
+    The markers only take effect once a capture has been requested, either
+    manually with the ``c`` interactive command or automatically with
+    ``--rra-auto-capture``. With ``--rra-auto-capture``, use an
+    ``--rra-auto-capture-delay`` of around 500 ms: a capture requested
+    immediately after the graphics device is created can be empty, because the
+    driver has not finished setting up raytracing yet. Markers emitted before the
+    delay elapses are missed.
+
+Example — capture the region between two markers, requesting the capture with the ``c`` interactive command:
+
+.. code-block:: bash
+
+    RadeonDeveloperPanelCLI --mode raytracing \
+        --rra-marker-capture \
+        --rra-marker-begin RRABeginMarker \
+        --rra-marker-end RRAEndMarker
+
+Example — capture the region between two markers automatically, without any interaction:
+
+.. code-block:: bash
+
+    RadeonDeveloperPanelCLI --mode raytracing \
+        --rra-auto-capture \
+        --rra-auto-capture-delay 500 \
+        --rra-marker-capture \
+        --rra-marker-begin RRABeginMarker \
+        --rra-marker-end RRAEndMarker
 
 Crash Analysis (RGD) options
 -----------------------------

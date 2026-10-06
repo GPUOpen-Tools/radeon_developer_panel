@@ -158,6 +158,26 @@ The **Capture** section has the following items for raytracing:
 - **Ray dispatch buffer size**:
    * Defines the buffer size in system memory used for allocating ray dispatch data during scene capture.
 
+The **Marker capture** section allows capture to be triggered by user-defined markers embedded in the application
+instead of by the capture button or hotkey. This is useful when the moment of interest is difficult to reach
+interactively or needs to be captured deterministically across runs.
+
+.. NOTE::
+    Marker-based capture is only available when running with AMD driver version 26.20 or newer. The
+    **Marker capture** section is hidden when the installed driver does not support it.
+
+- **Enable marker-based capture** - When enabled, capture is triggered by user markers instead of by the capture button
+  or hotkey. Insert the begin marker in your application to start capture, and the end marker to finish.
+  Enable it before starting the application: the panel arms the capture automatically when the application connects,
+  in the same way as auto capture in the Profiling UI. While the application is connected, the capture button, hotkey,
+  and capture settings are disabled. One scene is captured per graphics device the application creates; restart the
+  application to capture again. The capture is armed half a second after the application creates its graphics device, so markers emitted
+  before then are missed.
+
+- **Begin marker** - The marker string that starts the capture. Defaults to ``RRABeginMarker``.
+
+- **End marker** - The marker string that ends the capture. Defaults to ``RRAEndMarker``.
+
 Capturing a scene can be achieved by the following:
 
 * **Click the Capture scene button**

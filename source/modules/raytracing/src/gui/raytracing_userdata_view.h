@@ -84,6 +84,14 @@ private slots:
     /// @param [in] supported true if marker-based capture is supported by the driver.
     void OnMarkerCaptureSupportedChanged(bool supported);
 
+    /// @brief Called when prelaunch settings become editable or read-only.
+    /// @param [in] enabled true if the settings can be edited.
+    void OnPrelaunchSettingsEditableChanged(bool enabled) const;
+
+    /// @brief Called when the settings that a marker auto-capture depends on become editable or read-only.
+    /// @param [in] enabled true if the settings can be edited.
+    void OnAutoCaptureSettingsEditableChanged(bool enabled) const;
+
 private:
     void SetupUi();
 

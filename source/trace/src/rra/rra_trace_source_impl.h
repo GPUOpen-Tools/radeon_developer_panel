@@ -51,6 +51,7 @@ namespace devtrace
     protected:
         void   GetPreliminarySources(std::vector<UberTraceSource>& sources) override;
         Result GenerateCaptureConfig(const RraTraceSourceConfigPrivate& config, UbertraceCaptureConfig& capture_config) override;
+        std::optional<UbertraceAutoCaptureConfig> GetAutoCaptureConfig(const RraTraceSourceConfigPrivate& config) override;
 
     public:
         [[nodiscard]] bool SupportsCaptureMode(uint32_t mode) const override;
