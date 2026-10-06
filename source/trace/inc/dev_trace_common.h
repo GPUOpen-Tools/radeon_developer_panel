@@ -14,12 +14,14 @@
 #endif
 #endif
 
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <functional>
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <utility>
 
 #include <dd_common_api.h>
 #include <system_info_reader.h>
@@ -216,6 +218,26 @@ namespace devtrace
     {
         return driver.packaging_version_major < desired_major_version ||
                (driver.packaging_version_major == desired_major_version && driver.packaging_version_minor < desired_minor_version);
+    }
+
+    /// @brief Gets the newest driver installed on the system.
+    ///
+    /// The per-device @p drivers list is only populated on Windows, and only by targets new enough to emit it, so this
+    /// falls back to the system-wide @p driver record when the list is empty. Entries in the list are in enumeration
+    /// order rather than version order, so the newest entry is selected by packaging version.
+    ///
+    /// @param [in] system_info The system info to select a driver from.
+    /// @return The newest driver record available for the system.
+    inline const system_info_utils::DriverInfo& GetNewestDriver(const system_info_utils::SystemInfo& system_info)
+    {
+        if (system_info.drivers.empty())
+        {
+            return system_info.driver;
+        }
+
+        return *std::ranges::max_element(system_info.drivers, {}, [](const system_info_utils::DriverInfo& driver) {
+            return std::pair{driver.packaging_version_major, driver.packaging_version_minor};
+        });
     }
 
 #ifdef _WIN32

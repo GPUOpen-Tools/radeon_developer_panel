@@ -258,6 +258,21 @@ RdpCaptureResult TraceSourceAdapter::ConfigureRra(const RdpCaptureRaytracingEnab
         return kRdpCaptureResultUnsupported;
     }
 
+    devtrace::RraTraceSourceConfig& config = rra->GetConfig();
+
+    // The driver thread reads both fields at device init, so it must never see auto-capture enabled with a stale delay:
+    // publish the delay before enabling, and disable before clearing the delay.
+    if ((params.flags & kRdpCaptureRaytracingEnableParamFlagUseAutoCapture) != 0)
+    {
+        config.auto_capture_delay_ms = params.auto_capture_delay_ms;
+        config.auto_capture_enabled  = true;
+    }
+    else
+    {
+        config.auto_capture_enabled  = false;
+        config.auto_capture_delay_ms = 0;
+    }
+
     return kRdpCaptureResultSuccess;
 }
 

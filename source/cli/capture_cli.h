@@ -61,11 +61,13 @@ struct CaptureConfig
 
     // Raytracing settings (RRA)
     RdpCaptureRayHistoryBufferSize rra_ray_history_buffer_size;  ///< Ray history buffer size (RRA).
-    bool        rra_collect_ray_dispatch_data = true;  ///< Collect ray dispatch data (RRA). When false, ray history is disabled regardless of buffer size.
-    uint32_t    rra_delay_ms                  = 0;     ///< Delay before triggering each raytracing capture, in milliseconds (RRA). 0 = no delay.
-    bool        rra_enable_marker_capture;             ///< Enable marker-based capture instead of frame-based (RRA).
-    std::string rra_marker_begin;                      ///< Marker string that starts the capture (RRA).
-    std::string rra_marker_end;                        ///< Marker string that ends the capture (RRA).
+    bool        rra_collect_ray_dispatch_data = true;   ///< Collect ray dispatch data (RRA). When false, ray history is disabled regardless of buffer size.
+    uint32_t    rra_delay_ms                  = 0;      ///< Delay before triggering each raytracing capture, in milliseconds (RRA). 0 = no delay.
+    bool        rra_enable_auto_capture       = false;  ///< Enable automatic capture (RRA).
+    uint32_t    rra_auto_capture_delay_ms     = 0;      ///< Delay in milliseconds before auto-capture fires (RRA).
+    bool        rra_enable_marker_capture;              ///< Enable marker-based capture instead of frame-based (RRA).
+    std::string rra_marker_begin;                       ///< Marker string that starts the capture (RRA).
+    std::string rra_marker_end;                         ///< Marker string that ends the capture (RRA).
 
     bool enable_enhanced_crash_analysis;  ///< Enable enhanced crash analysis (RGD).
 
@@ -174,6 +176,10 @@ private:
     /// @return The mode name string.
     std::string GetModeName() const;
 
+    /// @brief Whether any auto-capture trigger is armed: RGP frame / dispatch auto-capture, or RRA auto-capture.
+    /// @return true if the capture is triggered automatically rather than by the user.
+    bool IsAutoCaptureMode() const;
+
     /// @brief Applies blocklist entries and file from the configuration.
     void ApplyBlocklist() const;
 
@@ -247,16 +253,19 @@ private:
     /// @brief Clears the current progress bar line from the terminal.
     static void ClearProgressLine();
 
-    CaptureConfig        config_;                  ///< Capture configuration.
-    RdpCaptureFnTable    fn_table_{};              ///< Function table.
-    RdpCaptureContext    context_;                 ///< Capture context.
-    std::atomic_bool     capture_complete_;        ///< Flag indicating capture is complete.
-    std::atomic_bool     interrupted_;             ///< Flag indicating user interrupted.
-    std::vector<uint8_t> trace_data_;              ///< Captured trace data.
-    bool                 capture_success_;         ///< Flag indicating capture success.
-    bool                 capture_requested_;       ///< Flag indicating user explicitly requested a capture via 'c'.
-    std::string          connected_process_name_;  ///< Name of the connected process (set by AppFilter).
-    bool                 progress_active_;         ///< Flag indicating progress bar is being displayed (guarded by g_output_mutex).
+    CaptureConfig        config_;                          ///< Capture configuration.
+    RdpCaptureFnTable    fn_table_{};                      ///< Function table.
+    RdpCaptureContext    context_;                         ///< Capture context.
+    std::atomic_bool     capture_complete_;                ///< Flag indicating capture is complete.
+    std::atomic_bool     interrupted_;                     ///< Flag indicating user interrupted.
+    std::vector<uint8_t> trace_data_;                      ///< Captured trace data.
+    bool                 capture_success_;                 ///< Flag indicating capture success.
+    std::atomic_bool     capture_failed_;                  ///< A per-connection trace failure was reported (auto-capture grace tracking).
+    std::atomic_int      last_failure_result_;             ///< Result code of the most recent per-connection trace failure.
+    bool                 auto_capture_timed_out_ = false;  ///< The auto-capture grace window gave up; later results are ignored (guarded by g_output_mutex).
+    bool                 capture_requested_;               ///< Flag indicating user explicitly requested a capture via 'c'.
+    std::string          connected_process_name_;          ///< Name of the connected process (set by AppFilter).
+    bool                 progress_active_;                 ///< Flag indicating progress bar is being displayed (guarded by g_output_mutex).
 };
 
 /// @brief Parse command line arguments and create capture configuration.

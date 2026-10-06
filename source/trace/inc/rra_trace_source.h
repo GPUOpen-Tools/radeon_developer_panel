@@ -10,6 +10,7 @@
 
 #include <array>
 #include <atomic>
+#include <string>
 
 #include "configurable.h"
 #include "triggerable_trace_source.h"
@@ -37,6 +38,9 @@ namespace devtrace
 
         std::atomic<uint64_t> ray_history_buffer_size = 0;     ///< The size of the ray history buffer in bytes.
         std::atomic_bool      enable_ray_history      = true;  ///< true if ray history source should be enabled.
+
+        std::atomic_bool     auto_capture_enabled  = false;  ///< true if auto-capture is enabled.
+        std::atomic_uint32_t auto_capture_delay_ms = 0;      ///< Delay in milliseconds before auto-capture fires (0 = immediate on connect).
 
         std::atomic_bool enable_marker_capture       = false;             ///< true if marker-based capture should be used.
         std::atomic_bool is_marker_capture_supported = false;             ///< true if marker-based capture is supported by the driver.

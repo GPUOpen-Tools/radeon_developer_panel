@@ -623,11 +623,12 @@ public:
         std::cout << "--rra-capture-file-name=<string>              The name of the RRA capture file." << std::endl;
         std::cout << "--rra-enable-ray-history                      Enable ray history data collection for RRA." << std::endl;
         std::cout << "--rra-history-buffer-size=<number>            The ray history buffer size (0=minimum, 1=low, 2=default, 3=high, 4=maximum)." << std::endl;
-        // Marker-based RRA capture flags (--rra-enable-marker-capture / --rra-marker-begin /
-        // --rra-marker-end) are intentionally omitted from this help output. They are still
-        // parsed below so existing scripts continue to work; they are not advertised to end
-        // users. Note: the wrapper uses --rra-enable-marker-capture (see kOptionRraEnableMarkerCapture)
+        // Note: the wrapper uses --rra-enable-marker-capture (see kOptionRraEnableMarkerCapture)
         // while the CLI uses --rra-marker-capture; both refer to the same underlying feature.
+        std::cout << "--rra-enable-marker-capture                   Enable marker-based capture for RRA (instead of frame-based)." << std::endl;
+        std::cout << "                                              Requires AMD driver 26.20 or newer." << std::endl;
+        std::cout << "--rra-marker-begin=<string>                   The marker string that starts the RRA capture (default: RRABeginMarker)." << std::endl;
+        std::cout << "--rra-marker-end=<string>                     The marker string that ends the RRA capture (default: RRAEndMarker)." << std::endl;
         std::cout << "--number-of-frames=<number>                   Number of frames to render before exiting (ignored when RGP or RMV is enabled)."
                   << std::endl;
         std::cout << "--log-to-file                                 Enables logging to a file." << std::endl;

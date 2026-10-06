@@ -210,7 +210,16 @@ sub-table on `RdpCaptureFnTable` for per-feature operations.
 - **Memory Trace** — Use `fn.memory_trace.insert_snapshot()` to mark points of
   interest, then `dump_trace()` to write the RMV trace.
 - **Raytracing** — Configure ray history buffer size and optional marker-based
-  capture via `RdpCaptureRaytracingParams`.
+  capture via `RdpCaptureRaytracingParams`. To capture without calling
+  `begin_trace()`, set `kRdpCaptureRaytracingEnableParamFlagUseAutoCapture` in
+  `RdpCaptureRaytracingEnableParams::flags` (API 1.1 or newer); the trace is
+  requested `auto_capture_delay_ms` after the application creates its graphics
+  device. A delay of around 500 ms is recommended, since a trace requested
+  immediately can be empty. Call `fn.raytracing.set_params()` before
+  `fn.enable_feature()` when using auto-capture: the request can start as soon as
+  the feature is enabled, and it uses the parameters installed at that point. With marker-based capture enabled, the markers decide when the
+  capture begins and ends, whether the trace was requested with `begin_trace()`
+  or automatically.
 - **Crash Analysis** — Enable with optional enhanced analysis and summary
   generation via `RdpCaptureCrashAnalysisEnableParams`; the trace arrives through
   the trace-finished callback as a `.rgd` dump.
@@ -269,6 +278,13 @@ The API is versioned with the `RDP_CAPTURE_API_VERSION_MAJOR/MINOR/PATCH`
 macros. Always pass these to `RdpCaptureGetFnTable()`; if the loaded library is
 incompatible it returns `kRdpCaptureResultVersionMismatch` and the table is left
 untouched.
+
+Only the major version is checked. A minor version adds capabilities without
+changing the layout of existing structs, and a library older than the header you
+built against silently ignores what it does not know: for example, a 1.0 library
+ignores `kRdpCaptureRaytracingEnableParamFlagUseAutoCapture` (added in 1.1), so
+no capture is ever requested. Load a library at least as new as the header you
+built against.
 
 ## Result codes
 

@@ -43,10 +43,45 @@ bool RaytracingUserdataViewModel::ReceiveUserData([[maybe_unused]] const std::st
             config.enable_marker_capture = userdata.enable_marker_capture;
             config.marker_begin_string   = userdata.marker_begin_string;
             config.marker_end_string     = userdata.marker_end_string;
+
+            ApplyMarkerAutoCapture(config);
         }
+
+        EmitAutoCaptureSettingsEditable();
     }
 
     return true;
+}
+
+void RaytracingUserdataViewModel::ApplyMarkerAutoCapture(devtrace::RraTraceSourceConfig& config)
+{
+    // Markers only take effect while a trace is requested, so arm the request automatically when the application
+    // connects. The markers then decide when capture begins and ends.
+    //
+    // The driver thread reads both fields at device init, so it must never see auto-capture enabled with a stale delay:
+    // publish the delay before enabling, and disable before clearing the delay.
+    if (config.enable_marker_capture && config.is_marker_capture_supported)
+    {
+        config.auto_capture_delay_ms = kMarkerCaptureArmDelayMs;
+        config.auto_capture_enabled  = true;
+    }
+    else
+    {
+        config.auto_capture_enabled  = false;
+        config.auto_capture_delay_ms = 0;
+    }
+}
+
+void RaytracingUserdataViewModel::EmitAutoCaptureSettingsEditable()
+{
+    // Like RGP auto-capture: settings stay editable unless an application is connected and marker auto-capture is armed.
+    bool marker_auto_capture_armed = false;
+    if (const auto trace_source = rra_trace_source_.lock(); trace_source != nullptr)
+    {
+        marker_auto_capture_armed = trace_source->GetConfig().auto_capture_enabled;
+    }
+
+    emit AutoCaptureSettingsEditableChanged(prelaunch_settings_editable_ || !marker_auto_capture_armed);
 }
 
 RaytracingUserdataViewModel::RaytracingUserdataViewModel(const std::shared_ptr<devtrace::RraUserdataMapper>& mapper,
@@ -56,7 +91,6 @@ RaytracingUserdataViewModel::RaytracingUserdataViewModel(const std::shared_ptr<d
                                                          const std::function<void(const std::string&)>&      apply_fn)
     : BaseUserdataViewModel(mapper, prelaunch_helper, output_path_parent_folder, apply_fn)
     , rra_trace_source_(rra_trace_source)
-    , enable_ray_history_(false)
 {
 }
 
@@ -205,5 +239,23 @@ void RaytracingUserdataViewModel::HandleMarkerEndStringChanged(const QString& ma
 
 void RaytracingUserdataViewModel::HandleTraceSupportChanged(const devtrace::RraTraceSourceSupportEventArgs& args)
 {
+    // Driver support is only known once the system info is read, which can be after the userdata was applied.
+    // The event is authoritative: the trace source reports unsupported on disconnect or a system info failure
+    // without clearing the value in its config.
+    if (const auto trace_source = rra_trace_source_.lock(); trace_source != nullptr)
+    {
+        auto& config                       = trace_source->GetConfig();
+        config.is_marker_capture_supported = args.is_marker_capture_supported;
+        ApplyMarkerAutoCapture(config);
+    }
+
     emit MarkerCaptureSupportedChanged(args.is_marker_capture_supported);
+    EmitAutoCaptureSettingsEditable();
+}
+
+void RaytracingUserdataViewModel::HandlePrelaunchSettingsEditableChanged(const bool editable)
+{
+    prelaunch_settings_editable_ = editable;
+    emit PrelaunchSettingsEditableChanged(editable);
+    EmitAutoCaptureSettingsEditable();
 }

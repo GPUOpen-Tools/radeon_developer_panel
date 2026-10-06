@@ -54,6 +54,17 @@ private slots:
     /// @param [in] connections The current connections.
     void OnCurrentConnectionsChanged(const std::unordered_map<DDConnectionId, devtrace::Api>& connections) const;
 
+    /// @brief Handles the connected process changing, including a done client disconnecting.
+    /// @param [in] connected_process_text The connected process description.
+    void OnConnectedProcessTextChanged(const QString& connected_process_text) const;
+
+    /// @brief Enables or disables the hotkey, capture delay and capture button while a marker auto-capture is armed.
+    /// @param [in] enabled true if the settings can be edited.
+    void OnAutoCaptureSettingsEditableChanged(bool enabled);
+
+    /// @brief Requests a capture when the hotkey is pressed, unless a marker auto-capture is armed.
+    void OnHotkeyTriggered() const;
+
     /// @brief Called when trying to open a file and the app executable is missing.
     /// @param [in] path The path where the app executable was expected.
     void ApplicationExecutableMissing(const QString& path);
@@ -71,19 +82,27 @@ private slots:
 
     /// @brief Called in response to view model Ui status enablement change
     /// @param [in] should_enable Ui should be enabled or disabled.
-    void OnUiStatusChanged(bool should_enable) const;
+    void OnUiStatusChanged(bool should_enable);
 
 private:
     void SetupConnections();
 
     void AddSpecializedCaptureOptions() const;
 
-    ModelBinder                                model_binder_;              ///< Utility object used to bind to a model.
-    std::unique_ptr<Ui::RaytracingView>        ui_;                        ///< The UI for this view.
-    std::weak_ptr<RaytracingViewModel>         view_model_;                ///< The view model.
-    std::weak_ptr<RaytracingUserdataViewModel> userdata_view_model_;       ///< The userdata view model.
-    RaytracingUserdataView*                    userdata_view_;             ///< The userdata view.
-    CurrentConnectionModel*                    current_connection_model_;  ///< The model that manages the current connections.
+    /// @brief Tells the userdata view model whether an application is connected.
+    void UpdatePrelaunchSettingsEditable() const;
+
+    /// @brief Enables the capture button only when the trace source is idle and no marker auto-capture is armed.
+    void UpdateCaptureButton() const;
+
+    ModelBinder                                model_binder_;                            ///< Utility object used to bind to a model.
+    std::unique_ptr<Ui::RaytracingView>        ui_;                                      ///< The UI for this view.
+    std::weak_ptr<RaytracingViewModel>         view_model_;                              ///< The view model.
+    std::weak_ptr<RaytracingUserdataViewModel> userdata_view_model_;                     ///< The userdata view model.
+    RaytracingUserdataView*                    userdata_view_;                           ///< The userdata view.
+    CurrentConnectionModel*                    current_connection_model_;                ///< The model that manages the current connections.
+    bool                                       ui_status_enabled_              = false;  ///< true if the trace source is idle.
+    bool                                       auto_capture_settings_editable_ = true;   ///< false while a marker auto-capture is armed.
 };
 
 #endif

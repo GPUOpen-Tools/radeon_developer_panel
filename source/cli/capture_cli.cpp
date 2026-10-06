@@ -56,10 +56,9 @@
 
 namespace
 {
-    constexpr uint16_t         kDefaultRemotePort     = 27300;
-    constexpr int              kSeparatorWidth        = 60;
-    constexpr int              kHexRadix              = 16;
-    constexpr std::string_view kHiddenRaytracingGroup = "Raytracing (hidden)";
+    constexpr uint16_t kDefaultRemotePort = 27300;
+    constexpr int      kSeparatorWidth    = 60;
+    constexpr int      kHexRadix          = 16;
 
     /// @brief Minimum legal value for the dispatch auto-capture start index.
     /// The trace clients (UberTrace render-op controller and legacy RGP client) treat
@@ -81,6 +80,21 @@ namespace
     constexpr uint32_t kFrameCaptureIndexMinimum = 5;
     constexpr int      kPollingIntervalMs        = 100;
     constexpr uint64_t kHzPerMhz                 = 1000000;
+
+    /// @brief Grace period the auto-capture wait keeps running after a per-connection
+    /// trace failure, giving another connection from the same process a chance to
+    /// produce a successful trace.
+    ///
+    /// A single GPU application often opens several short-lived devdriver connections
+    /// during startup (e.g. a DXR app that creates a probe device to query raytracing
+    /// support, tears it down, then creates the real device). Auto-capture can arm on
+    /// more than one of these; a connection that is torn down before its dispatch range
+    /// is reached reports a failure (result -2, "Failed to update config") while a later
+    /// connection goes on to capture successfully. Treating that first failure as
+    /// terminal made the CLI print "Capture failed" and exit without writing the file
+    /// even though a good trace arrived moments later. During this window the wait keeps
+    /// polling; a success latches immediately and any further failures are ignored.
+    constexpr int kAutoCaptureFailureGraceMs = 5000;
 
     /// @brief Mutex that serializes all stdout/stderr writes in the CLI.
     /// Callbacks (StatusChanged, ProgressUpdated, LogCallback, TraceFinished, AppFilter)
@@ -524,7 +538,7 @@ namespace
              "Profiling (RGP)",
              {
                  {"a,rgp-auto-capture",
-                  "Auto-capture mode: 'frame[:N]' to capture at frame N (default 0), "
+                  "Auto-capture mode: 'frame[:N]' to capture at frame N (N must be >= 5, default 5), "
                   "'dispatch[:start[:count]]' to capture dispatches (start must be >= 1, default 1; count default 1). "
                   "Examples: --rgp-auto-capture=frame, --rgp-auto-capture=frame:5, --rgp-auto-capture=dispatch:1:10",
                   cxxopts::value<std::string>()},
@@ -554,16 +568,17 @@ namespace
                  {"rra-delay-ms",
                   "Delay in milliseconds before triggering each raytracing capture (0 = no delay)",
                   cxxopts::value<uint32_t>()->default_value("0")},
-             }},
-
-            // Hidden raytracing options: registered with cxxopts so they remain parseable, but
-            // intentionally placed in a group that is excluded from --help output (see
-            // ordered_help_sections / kHiddenGroupNames). Used to discreetly hide marker-based
-            // capture from the public-facing help while keeping the existing flags functional.
-            {CaptureMode::kRaytracing,
-             kHiddenRaytracingGroup.data(),
-             {
-                 {"rra-marker-capture", "Enable marker-based capture instead of frame-based", nullptr},
+                 {"rra-auto-capture",
+                  "Request a raytracing capture automatically after the application starts, then exit (with --rra-marker-capture, the "
+                  "markers bound the capture)",
+                  nullptr},
+                 {"rra-auto-capture-delay",
+                  "Delay in milliseconds before auto-capture fires (requires --rra-auto-capture)",
+                  cxxopts::value<uint32_t>()->default_value("0")},
+                 {"rra-marker-capture",
+                  "Enable marker-based capture instead of frame-based (requires --rra-marker-begin and --rra-marker-end; "
+                  "requires AMD driver 26.20 or newer)",
+                  nullptr},
                  {"rra-marker-begin", "Marker string that starts the capture (requires --rra-marker-capture)", cxxopts::value<std::string>()},
                  {"rra-marker-end", "Marker string that ends the capture (requires --rra-marker-capture)", cxxopts::value<std::string>()},
              }},
@@ -789,6 +804,8 @@ CaptureCli::CaptureCli(CaptureConfig config)
     , capture_complete_(false)
     , interrupted_(false)
     , capture_success_(false)
+    , capture_failed_(false)
+    , last_failure_result_(0)
     , progress_active_(false)
 {
     g_capture_cli_instance = this;
@@ -878,7 +895,7 @@ int CaptureCli::Run()
         return WaitForCrashAndSave();
     }
 
-    if (config_.auto_capture_mode != AutoCaptureMode::kNone)
+    if (IsAutoCaptureMode())
     {
         return WaitForAutoCaptureAndSave();
     }
@@ -1290,6 +1307,13 @@ int CaptureCli::WaitForAutoCaptureAndSave()
         std::cout << "Auto-capture enabled, waiting for capture to complete...\n";
     }
 
+    // Deadline for giving up after a per-connection failure. It arms the first time the feature
+    // is idle with a failure outstanding, and is disarmed (reset) on any poll where a capture is
+    // in progress or no failure is outstanding (see the loop body). This way each fresh attempt
+    // gets a full grace window and an in-progress capture is never cut short
+    // (kAutoCaptureFailureGraceMs).
+    std::optional<std::chrono::steady_clock::time_point> failure_deadline;
+
     while (!capture_complete_.load() && !interrupted_.load())
     {
         const RdpCaptureFeatureStage stage = fn_table_.get_feature_stage(context_, GetFeature(), 0);
@@ -1315,6 +1339,71 @@ int CaptureCli::WaitForAutoCaptureAndSave()
             return 1;
         }
 
+        // A per-connection trace failure is not terminal in auto-capture mode: another
+        // connection from the same process may still succeed. Arm a bounded grace window on
+        // the first failure and only give up once it elapses with no success.
+        //
+        // The window must not fire while a capture is actually in progress: a large trace can
+        // take longer than kAutoCaptureFailureGraceMs to reach ReadyForCapture and then dump,
+        // and an earlier short-lived connection's failure must not abort that valid, possibly
+        // long-running capture. So skip (and disarm) the countdown whenever the feature reports
+        // an in-progress stage; the window only counts down while the feature is idle after a
+        // failure with no capture pending.
+        //
+        // ReadyForCapture counts as pending too. The stage is the highest across all connections,
+        // and a healthy connection that has not reached device init yet (so its auto-capture has
+        // not armed) reports ReadyForCapture, whereas a connection whose auto-capture failed ends
+        // in Done or Error. Without this, that healthy connection would be abandoned once the
+        // window elapsed, since no new transition to ReadyForCapture clears the failure latch.
+        const bool capture_in_progress = (stage == kRdpCaptureFeatureStageReadyForCapture || stage == kRdpCaptureFeatureStageWaitingToBeginCapture ||
+                                          stage == kRdpCaptureFeatureStageCapturing || stage == kRdpCaptureFeatureStageBusy);
+        if (capture_failed_.load() && !capture_in_progress)
+        {
+            if (!failure_deadline.has_value())
+            {
+                failure_deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(kAutoCaptureFailureGraceMs);
+            }
+            else if (std::chrono::steady_clock::now() >= *failure_deadline)
+            {
+                // Grace window elapsed with no success from any other connection: the capture
+                // has genuinely failed, unless a success lands at the same moment. TraceFinished()
+                // records its result while holding g_output_mutex, so decide under that lock:
+                // either a success has already completed the capture (fall through, let the loop
+                // exit and take the save path), or the timeout claims the outcome and
+                // TraceFinished() ignores anything that arrives afterwards. Exactly one wins.
+                //
+                // Scope the output mutex to the claim and the console writes only: Cleanup() tears
+                // down the feature and may fire synchronous callbacks that themselves lock
+                // g_output_mutex, so calling it while holding the lock could deadlock.
+                bool timed_out = false;
+                {
+                    const std::lock_guard<std::mutex> lock(g_output_mutex);
+                    if (!capture_complete_.load())
+                    {
+                        auto_capture_timed_out_ = true;
+                        timed_out               = true;
+                        if (progress_active_)
+                        {
+                            ClearProgressLine();
+                            progress_active_ = false;
+                        }
+                        std::cerr << "Capture failed (result: " << last_failure_result_.load() << ")\n";
+                    }
+                }
+                if (timed_out)
+                {
+                    Cleanup();
+                    return 1;
+                }
+            }
+        }
+        else
+        {
+            // Capture is pending/active (or no failure outstanding): disarm the window so the
+            // countdown restarts from scratch if this attempt also fails later.
+            failure_deadline.reset();
+        }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(kPollingIntervalMs));
     }
 
@@ -1335,6 +1424,14 @@ int CaptureCli::WaitForAutoCaptureAndSave()
 
     if (capture_success_ && !trace_data_.empty())
     {
+        // Validate RRA traces as the manual path does (SaveAndCleanupCapture): a trace with no
+        // acceleration structures is unusable and is not saved.
+        if (config_.mode == CaptureMode::kRaytracing && WarnIfNoAccelerationStructures())
+        {
+            Cleanup();
+            return 1;
+        }
+
         const std::string output_path = GenerateOutputPath();
 
         if (std::ofstream file(output_path, std::ios::binary); file.is_open())
@@ -1359,7 +1456,14 @@ int CaptureCli::WaitForAutoCaptureAndSave()
     {
         {
             const std::lock_guard<std::mutex> lock(g_output_mutex);
-            std::cerr << "Capture failed\n";
+            if (capture_failed_.load())
+            {
+                std::cerr << "Capture failed (result: " << last_failure_result_.load() << ")\n";
+            }
+            else
+            {
+                std::cerr << "Capture failed\n";
+            }
         }
         Cleanup();
         return 1;
@@ -2070,6 +2174,11 @@ bool CaptureCli::EnableFeature()
         break;
 
     case CaptureMode::kRaytracing:
+        if (config_.rra_enable_auto_capture)
+        {
+            enable_params.body.raytracing.flags |= kRdpCaptureRaytracingEnableParamFlagUseAutoCapture;
+            enable_params.body.raytracing.auto_capture_delay_ms = config_.rra_auto_capture_delay_ms;
+        }
         if (config_.rra_enable_marker_capture)
         {
             enable_params.body.raytracing.flags |= kRdpCaptureRaytracingEnableParamFlagEnableMarkerCapture;
@@ -2127,6 +2236,11 @@ bool CaptureCli::EnableFeature()
     }
     }
 
+    // Install the raytracing parameters (marker strings, ray history) before enabling: with
+    // --rra-auto-capture the trace request becomes visible to the driver as soon as the feature
+    // is enabled, and it must not see the default frame-based configuration.
+    ApplyRaytracingParams();
+
     if (const RdpCaptureResult result = fn_table_.enable_feature(context_, &enable_params); result != kRdpCaptureResultSuccess)
     {
         if (result == kRdpCaptureResultUnsupported && config_.rra_enable_marker_capture)
@@ -2138,12 +2252,11 @@ bool CaptureCli::EnableFeature()
     }
 
     ApplyProfilingParams();
-    ApplyRaytracingParams();
 
     {
         const std::lock_guard<std::mutex> lock(g_output_mutex);
         std::cout << GetModeName() << " feature enabled";
-        if (config_.auto_capture_mode != AutoCaptureMode::kNone)
+        if (IsAutoCaptureMode())
         {
             std::cout << " (auto-capture enabled)";
         }
@@ -2297,6 +2410,13 @@ void CaptureCli::TraceFinished([[maybe_unused]] RdpCaptureFeature         featur
 {
     const std::lock_guard<std::mutex> lock(g_output_mutex);
 
+    // The auto-capture grace window already gave up (see WaitForAutoCaptureAndSave), so the
+    // outcome is decided and this late result must not be recorded.
+    if (auto_capture_timed_out_)
+    {
+        return;
+    }
+
     if (progress_active_)
     {
         ClearProgressLine();
@@ -2311,14 +2431,36 @@ void CaptureCli::TraceFinished([[maybe_unused]] RdpCaptureFeature         featur
         {
             trace_data_.assign(data.begin(), data.end());
         }
-    }
-    else
-    {
-        std::cerr << GetModeName() << " trace failed with result: " << result << '\n';
-        capture_success_ = false;
+        capture_complete_.store(true);
+        return;
     }
 
-    capture_complete_.store(true);
+    // A single GPU application can open several short-lived devdriver connections during
+    // startup, and auto-capture may arm on more than one of them. A connection that is
+    // torn down before its trigger fires reports a failure here (e.g. result -2) while a
+    // different connection still goes on to capture successfully. In auto-capture mode we
+    // therefore do NOT treat a failure as terminal: record it and let the wait loop apply a
+    // bounded grace period for a success to arrive from another connection.
+    // Once a success has latched, ignore any trailing failures outright.
+    if (capture_success_)
+    {
+        return;
+    }
+
+    std::cerr << GetModeName() << " trace failed with result: " << result << '\n';
+    last_failure_result_.store(result);
+    capture_failed_.store(true);
+
+    // Manual and crash-analysis loops still rely on a failure completing the wait; only
+    // auto-capture defers to the grace window (handled in WaitForAutoCaptureAndSave).
+    // This must test every auto-capture trigger, not just auto_capture_mode: RRA arms
+    // auto-capture through its own switch, and treating its first failed connection as
+    // terminal here would complete the wait before the grace window could ever run.
+    if (!IsAutoCaptureMode())
+    {
+        capture_success_ = false;
+        capture_complete_.store(true);
+    }
 }
 
 void CaptureCli::StatusChanged([[maybe_unused]] const RdpCaptureFeature       feature,
@@ -2340,6 +2482,14 @@ void CaptureCli::StatusChanged([[maybe_unused]] const RdpCaptureFeature       fe
     if (new_stage == kRdpCaptureDetailedStageApiUnsupported)
     {
         std::cout << "Connected process does not support " << GetModeName() << ", waiting for next connection...\n";
+    }
+
+    // TraceFinished() otherwise leaves the previous connection's failure latched. Clear it
+    // when a fresh connection becomes ready so that any subsequent failure belongs to the
+    // new attempt and starts a fresh grace window.
+    if (!capture_complete_.load() && IsAutoCaptureMode() && new_stage == kRdpCaptureDetailedStageReadyForCapture)
+    {
+        capture_failed_.store(false);
     }
 }
 
@@ -2585,6 +2735,14 @@ std::string CaptureCli::GetModeName() const
         return "Clocks";
     }
     return "Unknown";
+}
+
+bool CaptureCli::IsAutoCaptureMode() const
+{
+    // auto_capture_mode only ever describes RGP frame / dispatch auto-capture. RRA arms its
+    // auto-capture through a mode-specific switch, so testing auto_capture_mode alone would
+    // misclassify it as a manual capture.
+    return config_.auto_capture_mode != AutoCaptureMode::kNone || (config_.mode == CaptureMode::kRaytracing && config_.rra_enable_auto_capture);
 }
 
 std::string CaptureCli::GetClockModeName(const RdpCaptureGpuClockMode mode)
@@ -3022,18 +3180,10 @@ bool ParseCommandLine(const int argc, char** argv, CaptureConfig& config)
         "System Info",
     };
 
-    // Groups that are intentionally registered with cxxopts (so their options remain
-    // parseable) but deliberately excluded from --help output. Used to keep options
-    // functional without advertising them to end users.
-    static const std::set<std::string> kHiddenGroupNames = {
-        std::string(kHiddenRaytracingGroup),
-    };
-
-    // Drift guard: every cxxopts-registered group must either appear in
-    // ordered_help_sections or be explicitly listed as a hidden group.  This catches
-    // the case where a future add_options() call introduces a new group but forgets
-    // to update the ordering above, which would otherwise be silently omitted from
-    // --help.
+    // Drift guard: every cxxopts-registered group must appear in ordered_help_sections.
+    // This catches the case where a future add_options() call introduces a new group but
+    // forgets to update the ordering above, which would otherwise be silently omitted
+    // from --help.
     {
         std::set<std::string> ordered_set;
         for (const auto& section : ordered_help_sections)
@@ -3045,9 +3195,9 @@ bool ParseCommandLine(const int argc, char** argv, CaptureConfig& config)
         }
         for (const auto& group : options.groups())
         {
-            if (ordered_set.find(group) == ordered_set.end() && kHiddenGroupNames.find(group) == kHiddenGroupNames.end())
+            if (ordered_set.find(group) == ordered_set.end())
             {
-                std::cerr << "Internal error: cxxopts group \"" << group << "\" is missing from ordered_help_sections and kHiddenGroupNames.\n";
+                std::cerr << "Internal error: cxxopts group \"" << group << "\" is missing from ordered_help_sections.\n";
                 return false;
             }
         }
@@ -3236,7 +3386,17 @@ bool ParseCommandLine(const int argc, char** argv, CaptureConfig& config)
         return false;
     }
 
+    config.rra_enable_auto_capture   = result.count("rra-auto-capture") > 0;
+    config.rra_auto_capture_delay_ms = result["rra-auto-capture-delay"].as<uint32_t>();
     config.rra_enable_marker_capture = result.count("rra-marker-capture") > 0;
+
+    // The delay is only forwarded to the driver on the auto-capture path, so on its own it is
+    // silently ignored. Reject it rather than let the user believe a delay was applied.
+    if (result.count("rra-auto-capture-delay") > 0 && !config.rra_enable_auto_capture)
+    {
+        std::cerr << "--rra-auto-capture-delay requires --rra-auto-capture\n";
+        return false;
+    }
 
     if (result.count("rra-marker-begin") != 0)
     {

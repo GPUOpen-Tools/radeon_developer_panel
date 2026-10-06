@@ -134,6 +134,14 @@ void RaytracingUserdataView::SetModel(const std::shared_ptr<RaytracingUserdataVi
     model_binder_.Connect(
         view_model_.get(), &RaytracingUserdataViewModel::MarkerCaptureSupportedChanged, this, &RaytracingUserdataView::OnMarkerCaptureSupportedChanged);
 
+    // Settings locked while an application is connected
+    model_binder_.Connect(
+        view_model_.get(), &RaytracingUserdataViewModel::PrelaunchSettingsEditableChanged, this, &RaytracingUserdataView::OnPrelaunchSettingsEditableChanged);
+    model_binder_.Connect(view_model_.get(),
+                          &RaytracingUserdataViewModel::AutoCaptureSettingsEditableChanged,
+                          this,
+                          &RaytracingUserdataView::OnAutoCaptureSettingsEditableChanged);
+
     model_binder_.Connect(
         view_model.get(), &RaytracingUserdataViewModel::RayHistoryBufferSizeIndexChanged, this, &RaytracingUserdataView::OnRayHistoryBufferSizeIndexChanged);
     model_binder_.Connect(ray_history_ui_->history_buffer_size,
@@ -226,6 +234,22 @@ void RaytracingUserdataView::OnMarkerCaptureSupportedChanged(bool supported)
     {
         marker_capture_pane_->setVisible(supported);
     }
+}
+
+void RaytracingUserdataView::OnPrelaunchSettingsEditableChanged(const bool enabled) const
+{
+    // Marker capture must be chosen before the application connects, since that is when the capture is armed
+    enable_marker_capture_checkbox_->setEnabled(enabled);
+}
+
+void RaytracingUserdataView::OnAutoCaptureSettingsEditableChanged(const bool enabled) const
+{
+    marker_begin_edit_->setEnabled(enabled);
+    marker_end_edit_->setEnabled(enabled);
+
+    capture_ui_->collect_ray_history_checkbox->setEnabled(enabled);
+    ray_history_ui_->history_buffer_size->setEnabled(enabled);
+    ray_history_ui_->history_buffer_size_custom_edit->setEnabled(enabled);
 }
 
 Ui::RaytracingCapture* RaytracingUserdataView::GetCaptureUi() const
