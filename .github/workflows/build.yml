@@ -75,7 +75,10 @@ jobs:
             libgl1-mesa-dev \
             libx11-xcb-dev \
             libxkbcommon-x11-dev \
-            libwayland-dev
+            libwayland-dev \
+            pkg-config \
+            libtraceevent-dev \
+            libtracefs-dev
 
       - name: Configure
         run: cmake -S . -B build/release -G Ninja -DCMAKE_BUILD_TYPE=Release
