@@ -21,7 +21,7 @@ if (NOT SYSTEM_INFO_UTILS_DIR)
     FetchContent_Declare(
             system_info_utils
             GIT_REPOSITORY "https://github.com/GPUOpen-Tools/system_info_utils.git"
-            GIT_TAG main
+            GIT_TAG v2.4
             SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/system_info_utils"
     )
     FetchContent_MakeAvailable(system_info_utils)
@@ -40,7 +40,7 @@ if (NOT LIBAMDRDF_DIR)
     FetchContent_Declare(
             rdf
             GIT_REPOSITORY "https://github.com/GPUOpen-Drivers/libamdrdf.git"
-            GIT_TAG main
+            GIT_TAG v1.4.2
             SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/rdf"
     )
     FetchContent_MakeAvailable(rdf)
@@ -66,7 +66,7 @@ if (NOT DEVDRIVER_DIR)
     FetchContent_Declare(
             devdriver
             GIT_REPOSITORY "https://github.com/GPUOpen-Tools/devdriver.git"
-            GIT_TAG main
+            GIT_TAG v26.07.23
             SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/devdriver"
     )
     FetchContent_MakeAvailable(devdriver)
@@ -79,7 +79,7 @@ if (NOT QTCOMMON_DIR)
     FetchContent_Declare(
             qt_common
             GIT_REPOSITORY "https://github.com/GPUOpen-Tools/qt_common.git"
-            GIT_TAG master
+            GIT_TAG v4.5.0
             SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/qt_common"
     )
     FetchContent_MakeAvailable(qt_common)
@@ -92,7 +92,7 @@ if (NOT SPM_DB_DIR)
     FetchContent_Declare(
             spm_db
             GIT_REPOSITORY "https://github.com/GPUOpen-Tools/spm_db.git"
-            GIT_TAG main
+            GIT_TAG v1.1.0
             SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/spm_db"
     )
     FetchContent_MakeAvailable(spm_db)
